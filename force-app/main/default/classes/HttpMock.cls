@@ -30,6 +30,8 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock statusCodeBadRequest(); // 400
         HttpMock statusCodeUnauthorized(); // 401
         HttpMock statusCodeNotFound(); // 404
+        HttpMock statusCodeInternalServerError(); // 500
+
         HttpMock statusCode(Integer statusCode);
     }
 
@@ -72,6 +74,8 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         }
 
         workingHttpResponse = new HttpResponse();
+        body('{}');
+        contentTypeJson();
         statusCodeOk();
         mocks.get(httpMethod).put(endpoint, workingHttpResponse);
         return this;
@@ -136,6 +140,10 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         return statusCode(404);
     }
 
+    public HttpMock statusCodeInternalServerError() {
+        return statusCode(500);
+    }
+
     public HttpMock statusCode(Integer statusCode) {
         workingHttpResponse.setStatusCode(statusCode);
         return this;
@@ -146,6 +154,24 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpResponse respond(HttpRequest request) {
-        return null;
+        return findMockedHttpResponseForRequest(request);
+    }
+
+    private HttpResponse findMockedHttpResponseForRequest(HttpRequest httpRequest) {
+        String httpMethod = httpRequest.getMethod();
+
+        if (!mocks.containsKey(httpMethod)) {
+            return null; // throw exception
+        }
+
+        String httpEndpoint = httpRequest.getEndpoint();
+
+        for (String url : mocks.get(httpMethod).keySet()) {
+            if (httpEndpoint.contains(url)) {
+                return mocks.get(httpMethod).get(url);
+            }
+        }
+
+        return null; // throw exception
     }
 }
