@@ -3,101 +3,151 @@ private class HttpMockTest {
     @IsTest
     static void get() {
          // Setup
+         Id accountId = new TestIdGenerator().generate(Account.SObjectType);
+
          new HttpMock()
-            .get('/v1/persons')
-            .body(new List<Person>{
-                new Person('John', 'john@beyondthecloud.dev'),
-                new Person('Peter', 'peter@beyondthecloud.dev')
-            })
-            .contentTypeJson()
-            .statusCodeOk()
+            .get('/services/data/v61.0/sobjects/Account/' + accountId)
+            .body(new Account(Id = accountId, Name = 'Test Account'))
             .mock();
 
         // Test
         Test.startTest();
-        List<Person> persons = new PersonApi().getPersons();
+        Account account = new AccountApi().getAccount(accountId);
         Test.stopTest();
 
         // Verify
-        Assert.areEqual(2, persons.size());
-    }
-
-    @IsTest
-    static void getWithDynamicEndpoint() {
-         // Setup
-         new HttpMock()
-            .get('/v1/person/bart@beyondthecloud.dev')
-            .body(new Person('Bart', 'bart@beyondthecloud.dev'))
-            .contentTypeJson()
-            .statusCodeOk()
-            .mock();
-
-        // Test
-        Test.startTest();
-        Person person = new PersonApi().getPerson('bart@beyondthecloud.dev');
-        Test.stopTest();
-
-        // Verify
-        Assert.isNotNull(person);
+        Assert.isNotNull(account);
+        Assert.areEqual(accountId, account.Id);
     }
 
     @IsTest
     static void post() {
          // Setup
+         Id accountId = new TestIdGenerator().generate(Account.SObjectType);
+
          new HttpMock()
-            .post('/v1/person/')
-            .body(new Person('Bart', 'bart@beyondthecloud.dev'))
-            .contentTypeJson()
-            .statusCodeOk()
+            .post('/services/data/v61.0/sobjects/Account/')
+            .body(new Map<String, Object>{
+                'id' => accountId,
+                'errors' => new List<String>(),
+                'success' => true
+            })
             .mock();
 
         // Test
         Test.startTest();
-        new PersonApi().updatePerson(new Person('Bart', 'bart@beyondthecloud.dev'));
+        Map<String, Object> response = new AccountApi().createAccount(new Account(Name = 'Test Account'));
         Test.stopTest();
 
         // Verify
-        // Assert.isNotNull(person);
+        Assert.isTrue((Boolean) response.get('success'));
+        Assert.areEqual((String) response.get('id'), accountId);
     }
 
-    private class PersonApi {
-        private final String BASE_API_URL = 'https://test.api.com';
+    @IsTest
+    static void patch() {
+         // Setup
+         Id accountId = new TestIdGenerator().generate(Account.SObjectType);
 
-        public List<Person> getPersons() {
+         new HttpMock()
+            .patch('/services/data/v61.0/sobjects/Account/')
+            .mock();
+
+        // Test
+        Test.startTest();
+        Boolean isSuccess = new AccountApi().updateAccount(accountId, new Map<String, Object>{ 'Name' => 'New Account Name' });
+        Test.stopTest();
+
+        // Verify
+        Assert.isTrue(isSuccess);
+    }
+
+    @IsTest
+    static void deletex() {
+         // Setup
+         Id accountId = new TestIdGenerator().generate(Account.SObjectType);
+
+         new HttpMock()
+            .deletex('/services/data/v61.0/sobjects/Account/')
+            .mock();
+
+        // Test
+        Test.startTest();
+        Boolean isSuccess = new AccountApi().deleteAccount(accountId);
+        Test.stopTest();
+
+        // Verify
+        Assert.isTrue(isSuccess);
+    }
+
+    private class AccountApi {
+        private final String BASE_API_URL = URL.getCurrentRequestUrl().toExternalForm();
+
+        public Account getAccount(Id accountId) {
             HttpRequest request = new HttpRequest();
-            request.setMethod('GET');
-            request.setEndpoint(BASE_API_URL + '/v1/persons');
 
-            return (List<Person>) JSON.deserialize(new Http().send(request).getBody(), List<Person>.class);
+            request.setMethod('GET');
+            request.setEndpoint(BASE_API_URL + '/services/data/v61.0/sobjects/Account/' + accountId);
+
+            HttpResponse response = new Http().send(request);
+
+            return (Account) JSON.deserialize(response.getBody(), Account.class);
         }
 
-        public Person getPerson(String username) {
+        public Map<String, Object> createAccount(Account newAccount) {
             HttpRequest request = new HttpRequest();
-            request.setMethod('GET');
-            request.setEndpoint(BASE_API_URL + '/v1/person/' + username);
 
-            return (Person) JSON.deserialize(new Http().send(request).getBody(), Person.class);
-        }
-
-        public Boolean updatePerson(Person person) {
-            HttpRequest request = new HttpRequest();
             request.setMethod('POST');
-            request.setEndpoint(BASE_API_URL + '/v1/person/' + person.username);
+            request.setEndpoint(BASE_API_URL + '/services/data/v61.0/sobjects/Account/');
             request.setHeader('Content-Type', 'application/json');
-            request.setBody(JSON.serialize(person));
+            request.setBody(JSON.serialize(newAccount));
 
-            return Boolean.valueOf(new Http().send(request).getBody());
+            HttpResponse response = new Http().send(request);
+
+            return (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+        }
+
+        public Boolean updateAccount(Id accountId, Map<String, Object> fields) {
+            HttpRequest request = new HttpRequest();
+
+            request.setMethod('PATCH');
+            request.setEndpoint(BASE_API_URL + '/services/data/v61.0/sobjects/Account/' + accountId);
+            request.setHeader('Content-Type', 'application/json');
+            request.setBody(JSON.serialize(fields));
+
+            HttpResponse response = new Http().send(request);
+
+            return response.getStatusCode() == 200;
+        }
+
+        public Boolean deleteAccount(Id accountId) {
+            HttpRequest request = new HttpRequest();
+
+            request.setMethod('DELETE');
+            request.setEndpoint(BASE_API_URL + '/services/data/v61.0/sobjects/Account/' + accountId);
+            request.setHeader('Content-Type', 'application/json');
+
+            HttpResponse response = new Http().send(request);
+
+            return response.getStatusCode() == 200;
         }
     }
 
-    private class Person {
-        public String name;
-        public String username;
-        public Integer age = 33;
+    public class TestIdGenerator {
+        private final String RANDOM_STRING_CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
 
-        public Person(String name, String username) {
-            this.name = name;
-            this.username = username;
+        public Id generate(Schema.SObjectType sobjectType) {
+            String keyPrefix = sobjectType.getDescribe().getKeyPrefix();
+            return Id.valueOf(keyPrefix + '0000' + generateRandomString(8));
+        }
+
+        private String generateRandomString(Integer length) {
+            String randomString = '';
+            while (randomString.length() < length) {
+                Integer idx = Math.mod(Math.abs(Crypto.getRandomInteger()), RANDOM_STRING_CHARACTERS.length());
+                randomString += RANDOM_STRING_CHARACTERS.substring(idx, idx + 1);
+            }
+            return randomString;
         }
     }
 }

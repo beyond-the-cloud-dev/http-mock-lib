@@ -11,7 +11,7 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock post(String endpoint);
         HttpMock put(String endpoint);
         HttpMock patch(String endpoint);
-        HttpMock deleteX(String endpoint);
+        HttpMock deletex(String endpoint);
         HttpMock trace(String endpoint);
         HttpMock head(String endpoint);
         // Body
@@ -56,7 +56,7 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         return add('PATCH', endpoint);
     }
 
-    public HttpMock deleteX(String endpoint) {
+    public HttpMock deletex(String endpoint) {
         return add('DELETE', endpoint);
     }
 
