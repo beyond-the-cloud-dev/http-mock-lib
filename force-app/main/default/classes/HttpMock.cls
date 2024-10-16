@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2024 BeyondTheCloud.Dev
- * Licensed under the MIT License (LICENSE HERE)
+ * Licensed under the MIT License (https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/LICENSE)
  *
  * PMD False Positives:
 **/
