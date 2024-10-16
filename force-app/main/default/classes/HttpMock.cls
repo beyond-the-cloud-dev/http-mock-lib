@@ -161,7 +161,7 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         String httpMethod = httpRequest.getMethod();
 
         if (!mocks.containsKey(httpMethod)) {
-            return null; // throw exception
+            throw new HttpMethodNotMockedException('HTTP Method ' + httpMethod + ' hasn\'t been mocked.');
         }
 
         String httpEndpoint = httpRequest.getEndpoint();
@@ -172,6 +172,9 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
             }
         }
 
-        return null; // throw exception
+        throw new HttpEndpointNotMockedException('HTTP Endpoint ' + httpEndpoint + ' hasn\'t been mocked.');
     }
+
+    public class HttpMethodNotMockedException extends Exception {}
+    public class HttpEndpointNotMockedException extends Exception {}
 }
