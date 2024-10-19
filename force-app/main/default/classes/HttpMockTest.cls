@@ -329,6 +329,42 @@ private class HttpMockTest {
         Assert.areEqual(500, response.getStatusCode());
     }
 
+    @IsTest
+    static void customStatusCode() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCode(403)
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual(403, response.getStatusCode());
+    }
+
+    @IsTest
+    static void multipleCalloutMock() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeOk()
+            .get('/api/v2')
+            .statusCodeNotFound()
+            .mock();
+
+        Test.startTest();
+        HttpResponse response1 = new TestApi().makeCallout('GET', '/api/v1');
+        HttpResponse response2 = new TestApi().makeCallout('GET', '/api/v2');
+        Test.stopTest();
+
+        Assert.areEqual(200, response1.getStatusCode());
+        Assert.areEqual(404, response2.getStatusCode());
+    }
+
     private class TestApi {
         private final String BASE_API_URL = URL.getCurrentRequestUrl().toExternalForm();
 
