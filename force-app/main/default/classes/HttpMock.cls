@@ -31,8 +31,9 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock statusCodeUnauthorized(); // 401
         HttpMock statusCodeNotFound(); // 404
         HttpMock statusCodeInternalServerError(); // 500
-
         HttpMock statusCode(Integer statusCode);
+        // Headers
+        // HttpMock setHeader(String key, String value);
     }
 
     // Implementation
