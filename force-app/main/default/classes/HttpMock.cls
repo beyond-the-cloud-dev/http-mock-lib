@@ -43,6 +43,8 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock statusCode(Integer statusCode);
         // Headers
         HttpMock header(String key, String value);
+        // Mock
+        void mock();
     }
 
     // Implementation
@@ -89,7 +91,7 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         contentTypeJson();
         statusCodeOk();
 
-        mocks.get(httpMethod).put(endpoint, workingHttpResponse);
+        mocks.get(httpMethod).put(endpointToMock, workingHttpResponse);
 
         return this;
     }
