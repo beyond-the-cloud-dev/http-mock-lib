@@ -143,11 +143,11 @@ private class HttpMockTest {
     }
 
     @IsTest
-    static void contentTypePlainText() {
+    static void contentTypeTextPlain() {
         // Setup
         new HttpMock()
             .get('/api/v1')
-            .contentTypePlainText()
+            .contentTypeTextPlain()
             .mock();
 
         // Test
@@ -347,6 +347,23 @@ private class HttpMockTest {
     }
 
     @IsTest
+    static void header() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .header('Cache-Control', 'no-cache')
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual('no-cache', response.getHeader('Cache-Control'));
+    }
+
+    @IsTest
     static void multipleCalloutMock() {
         // Setup
         new HttpMock()
@@ -365,14 +382,56 @@ private class HttpMockTest {
         Assert.areEqual(404, response2.getStatusCode());
     }
 
-    private class TestApi {
-        private final String BASE_API_URL = URL.getCurrentRequestUrl().toExternalForm();
+    @IsTest
+    static void httpMethodNotMocked() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeOk()
+            .mock();
 
+        HttpMock.HttpMethodNotMockedException mockException = null;
+
+        Test.startTest();
+        try {
+            new TestApi().makeCallout('POST', '/api/v1');
+        } catch (HttpMock.HttpMethodNotMockedException e) {
+            mockException = e;
+        }
+        Test.stopTest();
+
+        Assert.isNotNull(mockException);
+        Assert.areEqual('HTTP Method POST hasn\'t been mocked.', mockException.getMessage());
+    }
+
+    @IsTest
+    static void httpEndpointNotMocked() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeOk()
+            .mock();
+
+        HttpMock.HttpEndpointNotMockedException mockException = null;
+
+        Test.startTest();
+        try {
+            new TestApi().makeCallout('GET', '/api/v2');
+        } catch (HttpMock.HttpEndpointNotMockedException e) {
+            mockException = e;
+        }
+        Test.stopTest();
+
+        Assert.isNotNull(mockException);
+        Assert.areEqual('HTTP Endpoint /api/v2 hasn\'t been mocked.', mockException.getMessage());
+    }
+
+    private class TestApi {
         public HttpResponse makeCallout(String method, String endpoint) {
             HttpRequest request = new HttpRequest();
 
             request.setMethod(method);
-            request.setEndpoint(BASE_API_URL + endpoint);
+            request.setEndpoint(endpoint);
             request.setHeader('Content-Type', 'application/json');
             request.setBody(JSON.serialize(new Map<String, String>{ 'name' => 'callout' }));
 

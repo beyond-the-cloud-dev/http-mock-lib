@@ -19,7 +19,7 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock body(String body);
         HttpMock body(Blob body);
         // Content-Type
-        HttpMock contentTypePlainText(); // text/plain
+        HttpMock contentTypeTextPlain(); // text/plain
         HttpMock contentTypeCsv(); // text/csv
         HttpMock contentTypeJson(); // application/json
         HttpMock contentTypeXml(); // application/xml
@@ -33,7 +33,7 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock statusCodeInternalServerError(); // 500
         HttpMock statusCode(Integer statusCode);
         // Headers
-        // HttpMock setHeader(String key, String value);
+        HttpMock header(String key, String value);
     }
 
     // Implementation
@@ -96,7 +96,7 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         return this;
     }
 
-    public HttpMock contentTypePlainText() {
+    public HttpMock contentTypeTextPlain() {
         return contentType('text/plain');
     }
 
@@ -117,10 +117,10 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpMock contentType(String contentType) {
-        return addHeader('Content-Type', contentType);
+        return header('Content-Type', contentType);
     }
 
-    private HttpMock addHeader(String key, String value) {
+    public HttpMock header(String key, String value) {
         workingHttpResponse.setHeader(key, value);
         return this;
     }
