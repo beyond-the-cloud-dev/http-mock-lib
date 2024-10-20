@@ -217,21 +217,36 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     private HttpResponse findMockedHttpResponseForRequest(HttpRequest httpRequest) {
-        String httpMethod = httpRequest.getMethod();
+        String httpRequestMethod = httpRequest.getMethod();
 
-        if (!mocks.containsKey(httpMethod)) {
-            throw new HttpMethodNotMockedException('HTTP Method ' + httpMethod + ' hasn\'t been mocked.');
+        if (!mocks.containsKey(httpRequestMethod)) {
+            throw new HttpMethodNotMockedException('HTTP Method ' + httpRequestMethod + ' hasn\'t been mocked.');
         }
 
-        String httpEndpoint = httpRequest.getEndpoint();
+        String httpRequestEndpoint = httpRequest.getEndpoint();
+        String closestMatchingMockedEndpoint = findClosestMatchingMockedEndpoint(httpRequestEndpoint, mocks.get(httpRequestMethod).keySet());
 
-        for (String url : mocks.get(httpMethod).keySet()) {
-            if (httpEndpoint.contains(url)) {
-                return mocks.get(httpMethod).remove(url);
+        if (String.isBlank(closestMatchingMockedEndpoint)) {
+            throw new HttpEndpointNotMockedException('HTTP Endpoint ' + httpRequestEndpoint + ' hasn\'t been mocked.');
+        }
+
+        return mocks.get(httpRequestMethod).remove(closestMatchingMockedEndpoint);
+    }
+
+    public static String findClosestMatchingMockedEndpoint(String requestEndpoint, Set<String> mockedEndpoints) {
+        String closestMatchingMockedEndpoint = null;
+        Integer maxMatchLength = 0;
+
+        for (String mockedEndpoint : mockedEndpoints) {
+            if (requestEndpoint.contains(mockedEndpoint)) {
+                if (mockedEndpoint.length() > maxMatchLength) {
+                    closestMatchingMockedEndpoint = mockedEndpoint;
+                    maxMatchLength = mockedEndpoint.length();
+                }
             }
         }
 
-        throw new HttpEndpointNotMockedException('HTTP Endpoint ' + httpEndpoint + ' hasn\'t been mocked.');
+        return closestMatchingMockedEndpoint;
     }
 
     public class HttpMethodNotMockedException extends Exception {}

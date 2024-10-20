@@ -541,7 +541,7 @@ private class HttpMockTest {
     }
 
     @IsTest
-    static void multipleCalloutMockForSubpath() {
+    static void multipleCalloutMockWithSubpath() {
         // Setup
         new HttpMock()
             .get('/api/v1').statusCodeOk()
@@ -551,6 +551,23 @@ private class HttpMockTest {
         Test.startTest();
         HttpResponse response1 = new TestApi().makeCallout('GET', '/api/v1');
         HttpResponse response2 = new TestApi().makeCallout('GET', '/api/v1/abc123');
+        Test.stopTest();
+
+        Assert.areEqual(200, response1.getStatusCode());
+        Assert.areEqual(404, response2.getStatusCode());
+    }
+
+    @IsTest
+    static void multipleCalloutMockWithSubpathAndRandomMocking() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1').statusCodeNotFound()
+            .get('/api/v1/abc123').statusCodeOk()
+            .mock();
+
+        Test.startTest();
+        HttpResponse response1 = new TestApi().makeCallout('GET', '/api/v1/abc123');
+        HttpResponse response2 = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
         Assert.areEqual(200, response1.getStatusCode());
