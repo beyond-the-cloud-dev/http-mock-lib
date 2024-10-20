@@ -4,6 +4,12 @@
 **/
 @IsTest
 public class HttpMock implements HttpMockLib, HttpCalloutMock {
+    /*
+        new HttpMock()
+            .get('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }')statusCodeOk()
+            .post('/api/v1/create').body('{ "success": true, "message": null }').statusCodeOk()
+            .mock();
+    */
     public interface HttpMockLib {
         HttpMock get(String endpointToMock);
         HttpMock post(String endpointToMock);
