@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2024 BeyondTheCloud.Dev
+ * Copyright (c) 2024 Beyond The Cloud Sp. z o.o. (BeyondTheCloud.Dev)
  * Licensed under the MIT License (https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/LICENSE)
 **/
 @IsTest
