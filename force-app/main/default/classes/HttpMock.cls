@@ -27,10 +27,19 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock contentType(String contentType);
         // Status Code
         HttpMock statusCodeOk(); // 200
+        HttpMock statusCodeCreated(); // 201
+        HttpMock statusCodeAccepted(); // 202
+        HttpMock statusCodeNoContent(); // 204
         HttpMock statusCodeBadRequest(); // 400
         HttpMock statusCodeUnauthorized(); // 401
+        HttpMock statusCodeForbidden(); // 403
         HttpMock statusCodeNotFound(); // 404
+        HttpMock statusCodeMethodNotAllowed(); // 405
         HttpMock statusCodeInternalServerError(); // 500
+        HttpMock statusCodeNotImplemented(); // 501
+        HttpMock statusCodeBadGateway(); // 502
+        HttpMock statusCodeServiceUnavailable(); // 503
+        HttpMock statusCodeGatewayTimeout(); // 504
         HttpMock statusCode(Integer statusCode);
         // Headers
         HttpMock header(String key, String value);
@@ -75,10 +84,13 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         }
 
         workingHttpResponse = new HttpResponse();
+
         body('{}');
         contentTypeJson();
         statusCodeOk();
+
         mocks.get(httpMethod).put(endpoint, workingHttpResponse);
+
         return this;
     }
 
@@ -129,6 +141,18 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         return statusCode(200);
     }
 
+    public HttpMock statusCodeCreated() {
+        return statusCode(201);
+    }
+
+    public HttpMock statusCodeAccepted() {
+        return statusCode(202);
+    }
+
+    public HttpMock statusCodeNoContent() {
+        return statusCode(204);
+    }
+
     public HttpMock statusCodeBadRequest() {
         return statusCode(400);
     }
@@ -137,12 +161,36 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         return statusCode(401);
     }
 
+    public HttpMock statusCodeForbidden() {
+        return statusCode(403);
+    }
+
     public HttpMock statusCodeNotFound() {
         return statusCode(404);
     }
 
+    public HttpMock statusCodeMethodNotAllowed() {
+        return statusCode(405);
+    }
+
     public HttpMock statusCodeInternalServerError() {
         return statusCode(500);
+    }
+
+    public HttpMock statusCodeNotImplemented() {
+        return statusCode(501);
+    }
+
+    public HttpMock statusCodeBadGateway() {
+        return statusCode(502);
+    }
+
+    public HttpMock statusCodeServiceUnavailable() {
+        return statusCode(503);
+    }
+
+    public HttpMock statusCodeGatewayTimeout() {
+        return statusCode(504);
     }
 
     public HttpMock statusCode(Integer statusCode) {

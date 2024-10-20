@@ -262,6 +262,57 @@ private class HttpMockTest {
     }
 
     @IsTest
+    static void statusCodeCreated() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeCreated()
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual(201, response.getStatusCode());
+    }
+
+    @IsTest
+    static void statusCodeAccepted() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeAccepted()
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual(202, response.getStatusCode());
+    }
+
+    @IsTest
+    static void statusCodeNoContent() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeNoContent()
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual(204, response.getStatusCode());
+    }
+
+    @IsTest
     static void statusCodeBadRequest() {
         // Setup
         new HttpMock()
@@ -296,6 +347,23 @@ private class HttpMockTest {
     }
 
     @IsTest
+    static void statusCodeForbidden() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeForbidden()
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual(403, response.getStatusCode());
+    }
+
+    @IsTest
     static void statusCodeNotFound() {
         // Setup
         new HttpMock()
@@ -313,6 +381,23 @@ private class HttpMockTest {
     }
 
     @IsTest
+    static void statusCodeMethodNotAllowed() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeMethodNotAllowed()
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual(405, response.getStatusCode());
+    }
+
+    @IsTest
     static void statusCodeInternalServerError() {
         // Setup
         new HttpMock()
@@ -327,6 +412,74 @@ private class HttpMockTest {
 
         // Verify
         Assert.areEqual(500, response.getStatusCode());
+    }
+
+    @IsTest
+    static void statusCodeNotImplemented() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeNotImplemented()
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual(501, response.getStatusCode());
+    }
+
+    @IsTest
+    static void statusCodeBadGateway() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeBadGateway()
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual(502, response.getStatusCode());
+    }
+
+    @IsTest
+    static void statusCodeServiceUnavailable() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeServiceUnavailable()
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual(503, response.getStatusCode());
+    }
+
+    @IsTest
+    static void statusCodeGatewayTimeout() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .statusCodeGatewayTimeout()
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual(504, response.getStatusCode());
     }
 
     @IsTest
