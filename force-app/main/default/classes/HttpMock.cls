@@ -5,13 +5,13 @@
 @IsTest
 public class HttpMock implements HttpMockLib, HttpCalloutMock {
     public interface HttpMockLib {
-        HttpMock get(String endpoint);
-        HttpMock post(String endpoint);
-        HttpMock put(String endpoint);
-        HttpMock patch(String endpoint);
-        HttpMock deletex(String endpoint);
-        HttpMock trace(String endpoint);
-        HttpMock head(String endpoint);
+        HttpMock get(String endpointToMock);
+        HttpMock post(String endpointToMock);
+        HttpMock put(String endpointToMock);
+        HttpMock patch(String endpointToMock);
+        HttpMock deletex(String endpointToMock);
+        HttpMock trace(String endpointToMock);
+        HttpMock head(String endpointToMock);
         // Body
         HttpMock body(Object body);
         HttpMock body(String body);
@@ -50,35 +50,35 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     private Map<String, Map<String, HttpResponse>> mocks = new Map<String, Map<String, HttpResponse>>();
     private HttpResponse workingHttpResponse = null;
 
-    public HttpMock get(String endpoint) {
-        return add('GET', endpoint);
+    public HttpMock get(String endpointToMock) {
+        return add('GET', endpointToMock);
     }
 
-    public HttpMock post(String endpoint) {
-        return add('POST', endpoint);
+    public HttpMock post(String endpointToMock) {
+        return add('POST', endpointToMock);
     }
 
-    public HttpMock put(String endpoint) {
-        return add('PUT', endpoint);
+    public HttpMock put(String endpointToMock) {
+        return add('PUT', endpointToMock);
     }
 
-    public HttpMock patch(String endpoint) {
-        return add('PATCH', endpoint);
+    public HttpMock patch(String endpointToMock) {
+        return add('PATCH', endpointToMock);
     }
 
-    public HttpMock deletex(String endpoint) {
-        return add('DELETE', endpoint);
+    public HttpMock deletex(String endpointToMock) {
+        return add('DELETE', endpointToMock);
     }
 
-    public HttpMock trace(String endpoint) {
-        return add('TRACE', endpoint);
+    public HttpMock trace(String endpointToMock) {
+        return add('TRACE', endpointToMock);
     }
 
-    public HttpMock head(String endpoint) {
-        return add('HEAD', endpoint);
+    public HttpMock head(String endpointToMock) {
+        return add('HEAD', endpointToMock);
     }
 
-    private HttpMock add(String httpMethod, String endpoint) {
+    private HttpMock add(String httpMethod, String endpointToMock) {
         if (!mocks.containsKey(httpMethod)) {
             mocks.put(httpMethod, new Map<String, HttpResponse>());
         }
