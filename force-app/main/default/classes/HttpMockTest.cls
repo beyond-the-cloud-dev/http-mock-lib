@@ -143,11 +143,11 @@ private class HttpMockTest {
     }
 
     @IsTest
-    static void contentTypeTextPlain() {
+    static void contentTypePlainText() {
         // Setup
         new HttpMock()
             .get('/api/v1')
-            .contentTypeTextPlain()
+            .contentTypePlainText()
             .mock();
 
         // Test
@@ -157,6 +157,23 @@ private class HttpMockTest {
 
         // Verify
         Assert.areEqual('text/plain', response.getHeader('Content-Type'));
+    }
+
+    @IsTest
+    static void contentTypeHtml() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .contentTypeHtml()
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual('text/html', response.getHeader('Content-Type'));
     }
 
     @IsTest
@@ -191,6 +208,23 @@ private class HttpMockTest {
 
         // Verify
         Assert.areEqual('application/json', response.getHeader('Content-Type'));
+    }
+
+    @IsTest
+    static void contentTypePdf() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1')
+            .contentTypePdf()
+            .mock();
+
+        // Test
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        // Verify
+        Assert.areEqual('application/pdf', response.getHeader('Content-Type'));
     }
 
     @IsTest

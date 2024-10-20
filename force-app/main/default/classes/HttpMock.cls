@@ -19,10 +19,12 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock body(String body);
         HttpMock body(Blob body);
         // Content-Type
-        HttpMock contentTypeTextPlain(); // text/plain
+        HttpMock contentTypePlainText(); // text/plain
+        HttpMock contentTypeHtml(); // text/html
         HttpMock contentTypeCsv(); // text/csv
         HttpMock contentTypeJson(); // application/json
         HttpMock contentTypeXml(); // application/xml
+        HttpMock contentTypePdf(); // application/pdf
         HttpMock contentTypeFormUrlencoded(); // application/x-www-form-urlencoded
         HttpMock contentType(String contentType);
         // Status Code
@@ -108,8 +110,12 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
         return this;
     }
 
-    public HttpMock contentTypeTextPlain() {
+    public HttpMock contentTypePlainText() {
         return contentType('text/plain');
+    }
+
+    public HttpMock contentTypeHtml() {
+        return contentType('text/html');
     }
 
     public HttpMock contentTypeCsv() {
@@ -118,6 +124,10 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
 
     public HttpMock contentTypeJson() {
         return contentType('application/json');
+    }
+
+    public HttpMock contentTypePdf() {
+        return contentType('application/pdf');
     }
 
     public HttpMock contentTypeXml() {
