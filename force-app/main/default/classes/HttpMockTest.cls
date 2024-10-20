@@ -91,8 +91,7 @@ private class HttpMockTest {
         Map<String, Object> mockedObject = new Map<String, Object>{ 'name' => 'test' };
 
         new HttpMock()
-            .get('/api/v1')
-            .body(mockedObject)
+            .get('/api/v1').body(mockedObject)
             .mock();
 
         // Test
@@ -110,8 +109,7 @@ private class HttpMockTest {
         String mockedString = JSON.serialize(new Map<String, String>{ 'name' => 'test' });
 
         new HttpMock()
-            .get('/api/v1')
-            .body(mockedString)
+            .get('/api/v1').body(mockedString)
             .mock();
 
         // Test
@@ -129,8 +127,7 @@ private class HttpMockTest {
         Blob mockedBlob = Blob.valueof('Test Blob');
 
         new HttpMock()
-            .get('/api/v1')
-            .body(mockedBlob)
+            .get('/api/v1').body(mockedBlob)
             .mock();
 
         // Test
@@ -146,8 +143,7 @@ private class HttpMockTest {
     static void contentTypePlainText() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .contentTypePlainText()
+            .get('/api/v1').contentTypePlainText()
             .mock();
 
         // Test
@@ -163,8 +159,7 @@ private class HttpMockTest {
     static void contentTypeHtml() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .contentTypeHtml()
+            .get('/api/v1').contentTypeHtml()
             .mock();
 
         // Test
@@ -180,8 +175,7 @@ private class HttpMockTest {
     static void contentTypeCsv() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .contentTypeCsv()
+            .get('/api/v1').contentTypeCsv()
             .mock();
 
         // Test
@@ -197,8 +191,7 @@ private class HttpMockTest {
     static void contentTypeJson() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .contentTypeJson()
+            .get('/api/v1').contentTypeJson()
             .mock();
 
         // Test
@@ -214,8 +207,7 @@ private class HttpMockTest {
     static void contentTypePdf() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .contentTypePdf()
+            .get('/api/v1').contentTypePdf()
             .mock();
 
         // Test
@@ -231,8 +223,7 @@ private class HttpMockTest {
     static void contentTypeXml() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .contentTypeXml()
+            .get('/api/v1').contentTypeXml()
             .mock();
 
         // Test
@@ -248,8 +239,7 @@ private class HttpMockTest {
     static void contentTypeFormUrlencoded() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .contentTypeFormUrlencoded()
+            .get('/api/v1').contentTypeFormUrlencoded()
             .mock();
 
         // Test
@@ -265,8 +255,7 @@ private class HttpMockTest {
     static void customContentType() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .contentType('text/html')
+            .get('/api/v1').contentType('text/html')
             .mock();
 
         // Test
@@ -282,8 +271,7 @@ private class HttpMockTest {
     static void statusCodeOk() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeOk()
+            .get('/api/v1').statusCodeOk()
             .mock();
 
         // Test
@@ -299,8 +287,7 @@ private class HttpMockTest {
     static void statusCodeCreated() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeCreated()
+            .get('/api/v1').statusCodeCreated()
             .mock();
 
         // Test
@@ -316,8 +303,7 @@ private class HttpMockTest {
     static void statusCodeAccepted() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeAccepted()
+            .get('/api/v1').statusCodeAccepted()
             .mock();
 
         // Test
@@ -333,8 +319,7 @@ private class HttpMockTest {
     static void statusCodeNoContent() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeNoContent()
+            .get('/api/v1').statusCodeNoContent()
             .mock();
 
         // Test
@@ -350,8 +335,7 @@ private class HttpMockTest {
     static void statusCodeBadRequest() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeBadRequest()
+            .get('/api/v1').statusCodeBadRequest()
             .mock();
 
         // Test
@@ -367,8 +351,7 @@ private class HttpMockTest {
     static void statusCodeUnauthorized() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeUnauthorized()
+            .get('/api/v1').statusCodeUnauthorized()
             .mock();
 
         // Test
@@ -384,8 +367,7 @@ private class HttpMockTest {
     static void statusCodeForbidden() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeForbidden()
+            .get('/api/v1').statusCodeForbidden()
             .mock();
 
         // Test
@@ -401,8 +383,7 @@ private class HttpMockTest {
     static void statusCodeNotFound() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeNotFound()
+            .get('/api/v1').statusCodeNotFound()
             .mock();
 
         // Test
@@ -418,8 +399,7 @@ private class HttpMockTest {
     static void statusCodeMethodNotAllowed() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeMethodNotAllowed()
+            .get('/api/v1').statusCodeMethodNotAllowed()
             .mock();
 
         // Test
@@ -435,8 +415,7 @@ private class HttpMockTest {
     static void statusCodeInternalServerError() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeInternalServerError()
+            .get('/api/v1').statusCodeInternalServerError()
             .mock();
 
         // Test
@@ -452,8 +431,7 @@ private class HttpMockTest {
     static void statusCodeNotImplemented() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeNotImplemented()
+            .get('/api/v1').statusCodeNotImplemented()
             .mock();
 
         // Test
@@ -469,8 +447,7 @@ private class HttpMockTest {
     static void statusCodeBadGateway() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeBadGateway()
+            .get('/api/v1').statusCodeBadGateway()
             .mock();
 
         // Test
@@ -486,8 +463,7 @@ private class HttpMockTest {
     static void statusCodeServiceUnavailable() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeServiceUnavailable()
+            .get('/api/v1').statusCodeServiceUnavailable()
             .mock();
 
         // Test
@@ -503,8 +479,7 @@ private class HttpMockTest {
     static void statusCodeGatewayTimeout() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeGatewayTimeout()
+            .get('/api/v1').statusCodeGatewayTimeout()
             .mock();
 
         // Test
@@ -520,8 +495,7 @@ private class HttpMockTest {
     static void customStatusCode() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCode(403)
+            .get('/api/v1').statusCode(403)
             .mock();
 
         // Test
@@ -537,8 +511,7 @@ private class HttpMockTest {
     static void header() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .header('Cache-Control', 'no-cache')
+            .get('/api/v1').header('Cache-Control', 'no-cache')
             .mock();
 
         // Test
@@ -554,10 +527,8 @@ private class HttpMockTest {
     static void multipleCalloutMock() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeOk()
-            .get('/api/v2')
-            .statusCodeNotFound()
+            .get('/api/v1').statusCodeOk()
+            .get('/api/v2').statusCodeNotFound()
             .mock();
 
         Test.startTest();
@@ -570,11 +541,27 @@ private class HttpMockTest {
     }
 
     @IsTest
+    static void multipleCalloutMockForSubpath() {
+        // Setup
+        new HttpMock()
+            .get('/api/v1').statusCodeOk()
+            .get('/api/v1/abc123').statusCodeNotFound()
+            .mock();
+
+        Test.startTest();
+        HttpResponse response1 = new TestApi().makeCallout('GET', '/api/v1');
+        HttpResponse response2 = new TestApi().makeCallout('GET', '/api/v1/abc123');
+        Test.stopTest();
+
+        Assert.areEqual(200, response1.getStatusCode());
+        Assert.areEqual(404, response2.getStatusCode());
+    }
+
+    @IsTest
     static void httpMethodNotMocked() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeOk()
+            .get('/api/v1').statusCodeOk()
             .mock();
 
         HttpMock.HttpMethodNotMockedException mockException = null;
@@ -595,8 +582,7 @@ private class HttpMockTest {
     static void httpEndpointNotMocked() {
         // Setup
         new HttpMock()
-            .get('/api/v1')
-            .statusCodeOk()
+            .get('/api/v1').statusCodeOk()
             .mock();
 
         HttpMock.HttpEndpointNotMockedException mockException = null;

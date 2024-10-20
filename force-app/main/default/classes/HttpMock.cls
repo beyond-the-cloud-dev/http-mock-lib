@@ -227,7 +227,7 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
 
         for (String url : mocks.get(httpMethod).keySet()) {
             if (httpEndpoint.contains(url)) {
-                return mocks.get(httpMethod).get(url);
+                return mocks.get(httpMethod).remove(url);
             }
         }
 
