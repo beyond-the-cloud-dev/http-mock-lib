@@ -3,7 +3,7 @@
  * Licensed under the MIT License (https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/LICENSE)
 **/
 @IsTest
-public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
+public class HttpMock implements HttpMockLib, HttpCalloutMock {
     public interface HttpMockLib {
         HttpMock get(String endpoint);
         HttpMock post(String endpoint);
