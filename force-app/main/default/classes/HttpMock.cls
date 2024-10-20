@@ -230,7 +230,7 @@ public with sharing class HttpMock implements HttpMockLib, HttpCalloutMock {
             throw new HttpEndpointNotMockedException('HTTP Endpoint ' + httpRequestEndpoint + ' hasn\'t been mocked.');
         }
 
-        return mocks.get(httpRequestMethod).remove(closestMatchingMockedEndpoint);
+        return mocks.get(httpRequestMethod).get(closestMatchingMockedEndpoint);
     }
 
     public static String findClosestMatchingMockedEndpoint(String requestEndpoint, Set<String> mockedEndpoints) {
