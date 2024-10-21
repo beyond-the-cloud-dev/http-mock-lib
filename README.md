@@ -4,7 +4,7 @@ Http Mock inspired by Robert Sösemann's [Apex Http Mock](https://github.com/rso
 
 ❌❌❌
 
-```
+```java
 @isTest
 global class MockHttpResponseGenerator implements HttpCalloutMock {
     global HTTPResponse respond(HTTPRequest req) {
@@ -21,7 +21,7 @@ Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
 
 ✅✅✅
 
-```
+```java
 new HttpMock()
   .get('/api/v1/authorize').body('{"example":"test"}').statusCodeOk()
   .mock();
