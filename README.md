@@ -95,3 +95,33 @@ public interface HttpMockLib {
     void mock();
 }
 ```
+
+## Features
+
+### Mock different HTTP methods
+
+Mock different HTTP methods in the same test method.  
+
+```java
+new HttpMock()
+    .get('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }').statusCodeOk()
+    .post('/api/v1/create').body('{ "success": true, "message": null }').statusCodeOk()
+    .mock();
+```
+
+Supported methods:
+- GET
+- POST
+- PUT
+- PATCH
+- DELETE
+- TRACE
+- HEAD
+
+### Return different body
+
+### Use built-in Content Types
+
+### Use built-in Status Codes
+
+### Set custom headers
