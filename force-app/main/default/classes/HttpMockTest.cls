@@ -120,6 +120,21 @@ private class HttpMockTest {
     }
 
     @IsTest
+    static void primitiveBody() {
+        Integer mockedInteger = 1;
+
+        new HttpMock()
+            .get('/api/v1').body(mockedInteger)
+            .mock();
+
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        Assert.areEqual(mockedInteger, Integer.valueOf(response.getBody()));
+    }
+
+    @IsTest
     static void contentTypePlainText() {
         new HttpMock()
             .get('/api/v1').contentTypePlainText()
