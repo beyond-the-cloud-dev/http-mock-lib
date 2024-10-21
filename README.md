@@ -1,6 +1,6 @@
 # Http Mock Lib
 
-Http Mock inspired by Robert Sösemann's [Apex Http Mock](https://github.com/rsoesemann/apex-httpmock).
+HTTP Mock inspired by Robert Sösemann’s [Apex Http Mock](https://github.com/rsoesemann/apex-httpmock).
 
 ❌❌❌
 
@@ -136,7 +136,7 @@ HttpMock body(Blob body);
 
 ### Use built-in Content Types
 
-Use different content types. By default content type is set to `application/json`.
+Use different content types. By default, the content type is set to `application/json`.
 
 ```java
 HttpMock contentTypePlainText(); // text/plain
@@ -154,7 +154,7 @@ Use `contentType(String contentType)` to set your own content type.
 
 ### Use built-in Status Codes
 
-Use different status codes. By default status code is set to 200 (OK).
+Use different status codes. By default, the status code is set to 200 (OK).
 
 Available status codes:
 
@@ -181,7 +181,7 @@ Use `statusCode(Integer statusCode)` to set your own status code.
 
 ### Set custom headers
 
-Set response headers using `header(String key, String value)` method.
+Set response headers using the `header(String key, String value)` method.
 
 ```java
 new HttpMock()
