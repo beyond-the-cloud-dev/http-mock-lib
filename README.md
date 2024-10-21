@@ -120,8 +120,71 @@ Supported methods:
 
 ### Return different body
 
+```java
+new HttpMock()
+    .get('/api/v1').body(new Map<String, String>{ 'token' => 'aZ3Xb7Qk' }).statusCodeOk()
+    .mock();
+```
+
+Mock HTTP response body by using the following methods:
+
+```java
+HttpMock body(Object body);
+HttpMock body(String body);
+HttpMock body(Blob body);
+```
+
 ### Use built-in Content Types
+
+Use different content types. By default content type is set to `application/json`.
+
+```java
+HttpMock contentTypePlainText(); // text/plain
+HttpMock contentTypeHtml(); // text/html
+HttpMock contentTypeCsv(); // text/csv
+HttpMock contentTypeJson(); // application/json
+HttpMock contentTypeXml(); // application/xml
+HttpMock contentTypePdf(); // application/pdf
+HttpMock contentTypeFormUrlencoded(); // application/x-www-form-urlencoded
+
+HttpMock contentType(String contentType);
+```
+
+Use `contentType(String contentType)` to set your own content type. 
 
 ### Use built-in Status Codes
 
+Use different status codes. By default status code is set to 200 (OK).
+
+Available status codes:
+
+```java
+HttpMock statusCodeOk(); // 200
+HttpMock statusCodeCreated(); // 201
+HttpMock statusCodeAccepted(); // 202
+HttpMock statusCodeNoContent(); // 204
+HttpMock statusCodeBadRequest(); // 400
+HttpMock statusCodeUnauthorized(); // 401
+HttpMock statusCodeForbidden(); // 403
+HttpMock statusCodeNotFound(); // 404
+HttpMock statusCodeMethodNotAllowed(); // 405
+HttpMock statusCodeInternalServerError(); // 500
+HttpMock statusCodeNotImplemented(); // 501
+HttpMock statusCodeBadGateway(); // 502
+HttpMock statusCodeServiceUnavailable(); // 503
+HttpMock statusCodeGatewayTimeout(); // 504
+
+HttpMock statusCode(Integer statusCode);
+```
+
+Use `statusCode(Integer statusCode)` to set your own status code. 
+
 ### Set custom headers
+
+Set response headers using `header(String key, String value)` method.
+
+```java
+new HttpMock()
+    .get('/api/v1').body('{ "token": "aZ3Xb7Qk" }').header('Cache-Control', 'no-cache')
+    .mock();
+```
