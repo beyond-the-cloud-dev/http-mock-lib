@@ -1,5 +1,32 @@
 # Http Mock Lib
 
+Http Mock inspired by Robert Sösemann's [Apex Http Mock](https://github.com/rsoesemann/apex-httpmock).
+
+❌❌❌
+
+```
+@isTest
+global class MockHttpResponseGenerator implements HttpCalloutMock {
+    global HTTPResponse respond(HTTPRequest req) {
+        HttpResponse res = new HttpResponse();
+        res.setHeader('Content-Type', 'application/json');
+        res.setBody('{"example":"test"}');
+        res.setStatusCode(200);
+        return res;
+    }
+}
+
+Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
+```
+
+✅✅✅
+
+```
+new HttpMock()
+  .get('/api/v1/authorize').body('{"example":"test"}').statusCodeOk()
+  .mock();
+```
+
 ## Example
 
 ```java
