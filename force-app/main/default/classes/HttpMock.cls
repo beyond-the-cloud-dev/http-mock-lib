@@ -244,11 +244,9 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         Integer maxMatchLength = 0;
 
         for (String mockedEndpoint : mockedEndpoints) {
-            if (requestEndpoint.contains(mockedEndpoint)) {
-                if (mockedEndpoint.length() > maxMatchLength) {
-                    closestMatchingMockedEndpoint = mockedEndpoint;
-                    maxMatchLength = mockedEndpoint.length();
-                }
+            if (requestEndpoint.contains(mockedEndpoint) && mockedEndpoint.length() > maxMatchLength) {
+                closestMatchingMockedEndpoint = mockedEndpoint;
+                maxMatchLength = mockedEndpoint.length();
             }
         }
 
