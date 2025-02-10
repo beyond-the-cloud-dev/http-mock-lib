@@ -50,13 +50,22 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         // Headers
         HttpMock header(String key, String value);
         // Mock
-        HttpMock mock();
+        void mock();
+    }
+
+    public static Integer getRequestCount(String httpMethod, String endpoint) {
+        if (!requestCountByMethodAndEndpoint.containsKey(httpMethod)) {
+            return 0;
+        }
+
+        return requestCountByMethodAndEndpoint.get(httpMethod).get(endpoint) ?? 0;
     }
 
     // Implementation
 
-    private Map<String, Map<String, HttpResponse>> mocks = new Map<String, Map<String, HttpResponse>>();
-    private Map<String, Map<String, Integer>> requestCountByMethodAndEndpoint = new Map<String, Map<String, Integer>>();
+    private static Map<String, Map<String, HttpResponse>> mocks = new Map<String, Map<String, HttpResponse>>();
+    private static Map<String, Map<String, Integer>> requestCountByMethodAndEndpoint = new Map<String, Map<String, Integer>>();
+
     private HttpResponse workingHttpResponse = null;
 
     public HttpMock get(String endpointToMock) {
@@ -92,13 +101,13 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
             mocks.put(httpMethod, new Map<String, HttpResponse>());
         }
 
-        workingHttpResponse = new HttpResponse();
+        this.workingHttpResponse = new HttpResponse();
 
         body('{}');
         contentTypeJson();
         statusCodeOk();
 
-        mocks.get(httpMethod).put(endpointToMock, workingHttpResponse);
+        mocks.get(httpMethod).put(endpointToMock, this.workingHttpResponse);
 
         return this;
     }
@@ -108,12 +117,12 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpMock body(String body) {
-        workingHttpResponse.setBody(body);
+        this.workingHttpResponse.setBody(body);
         return this;
     }
 
     public HttpMock body(Blob body) {
-        workingHttpResponse.setBodyAsBlob(body);
+        this.workingHttpResponse.setBodyAsBlob(body);
         return this;
     }
 
@@ -150,7 +159,7 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpMock header(String key, String value) {
-        workingHttpResponse.setHeader(key, value);
+        this.workingHttpResponse.setHeader(key, value);
         return this;
     }
 
@@ -211,21 +220,12 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpMock statusCode(Integer statusCode) {
-        workingHttpResponse.setStatusCode(statusCode);
+        this.workingHttpResponse.setStatusCode(statusCode);
         return this;
     }
 
-    public HttpMock mock() {
+    public void mock() {
         Test.setMock(HttpCalloutMock.class, this);
-        return this;
-    }
-
-    public Integer getRequestCount(String httpMethod, String endpoint) {
-        if (!requestCountByMethodAndEndpoint.containsKey(httpMethod)) {
-            return 0;
-        }
-
-        return requestCountByMethodAndEndpoint.get(httpMethod).get(endpoint) ?? 0;
     }
 
     public HttpResponse respond(HttpRequest request) {

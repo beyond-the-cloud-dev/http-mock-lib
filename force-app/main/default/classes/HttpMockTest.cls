@@ -511,14 +511,14 @@ private class HttpMockTest {
 
     @IsTest
     static void getRequestCount() {
-        HttpMock httpMock = new HttpMock().get('/api/v1').statusCodeOk().mock();
+        new HttpMock().get('/api/v1').statusCodeOk().mock();
 
         Test.startTest();
         new TestApi().makeCallout('GET', '/api/v1');
         new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(2, httpMock.getRequestCount('GET', '/api/v1'));
+        Assert.areEqual(2, HttpMock.getRequestCount('GET', '/api/v1'));
     }
 
     @IsTest
