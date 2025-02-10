@@ -53,9 +53,19 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         void mock();
     }
 
+    public static Integer getRequestCount(String httpMethod, String endpoint) {
+        if (!requestCountByMethodAndEndpoint.containsKey(httpMethod)) {
+            return 0;
+        }
+
+        return requestCountByMethodAndEndpoint.get(httpMethod).get(endpoint) ?? 0;
+    }
+
     // Implementation
 
-    private Map<String, Map<String, HttpResponse>> mocks = new Map<String, Map<String, HttpResponse>>();
+    private static Map<String, Map<String, HttpResponse>> mocks = new Map<String, Map<String, HttpResponse>>();
+    private static Map<String, Map<String, Integer>> requestCountByMethodAndEndpoint = new Map<String, Map<String, Integer>>();
+
     private HttpResponse workingHttpResponse = null;
 
     public HttpMock get(String endpointToMock) {
@@ -91,13 +101,13 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
             mocks.put(httpMethod, new Map<String, HttpResponse>());
         }
 
-        workingHttpResponse = new HttpResponse();
+        this.workingHttpResponse = new HttpResponse();
 
         body('{}');
         contentTypeJson();
         statusCodeOk();
 
-        mocks.get(httpMethod).put(endpointToMock, workingHttpResponse);
+        mocks.get(httpMethod).put(endpointToMock, this.workingHttpResponse);
 
         return this;
     }
@@ -107,12 +117,12 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpMock body(String body) {
-        workingHttpResponse.setBody(body);
+        this.workingHttpResponse.setBody(body);
         return this;
     }
 
     public HttpMock body(Blob body) {
-        workingHttpResponse.setBodyAsBlob(body);
+        this.workingHttpResponse.setBodyAsBlob(body);
         return this;
     }
 
@@ -149,7 +159,7 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpMock header(String key, String value) {
-        workingHttpResponse.setHeader(key, value);
+        this.workingHttpResponse.setHeader(key, value);
         return this;
     }
 
@@ -210,7 +220,7 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpMock statusCode(Integer statusCode) {
-        workingHttpResponse.setStatusCode(statusCode);
+        this.workingHttpResponse.setStatusCode(statusCode);
         return this;
     }
 
@@ -219,10 +229,19 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpResponse respond(HttpRequest request) {
-        return findMockedHttpResponseForRequest(request);
+        String closestMatchingMockedEndpoint = findClosestMatchingMockedEndpoint(request);
+
+        if (String.isBlank(closestMatchingMockedEndpoint)) {
+            throw new HttpEndpointNotMockedException('HTTP Endpoint ' + request.getEndpoint() + ' hasn\'t been mocked.');
+        }
+
+        String requestMethod = request.getMethod();
+
+        incrementRequestCount(requestMethod, closestMatchingMockedEndpoint);
+        return mocks.get(requestMethod).get(closestMatchingMockedEndpoint);
     }
 
-    private HttpResponse findMockedHttpResponseForRequest(HttpRequest httpRequest) {
+    private String findClosestMatchingMockedEndpoint(HttpRequest httpRequest) {
         String httpRequestMethod = httpRequest.getMethod();
 
         if (!mocks.containsKey(httpRequestMethod)) {
@@ -230,13 +249,7 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         }
 
         String httpRequestEndpoint = httpRequest.getEndpoint();
-        String closestMatchingMockedEndpoint = findClosestMatchingMockedEndpoint(httpRequestEndpoint, mocks.get(httpRequestMethod).keySet());
-
-        if (String.isBlank(closestMatchingMockedEndpoint)) {
-            throw new HttpEndpointNotMockedException('HTTP Endpoint ' + httpRequestEndpoint + ' hasn\'t been mocked.');
-        }
-
-        return mocks.get(httpRequestMethod).get(closestMatchingMockedEndpoint);
+        return findClosestMatchingMockedEndpoint(httpRequestEndpoint, mocks.get(httpRequestMethod).keySet());
     }
 
     public static String findClosestMatchingMockedEndpoint(String requestEndpoint, Set<String> mockedEndpoints) {
@@ -251,6 +264,15 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         }
 
         return closestMatchingMockedEndpoint;
+    }
+
+    private void incrementRequestCount(String httpMethod, String endpoint) {
+        if (!requestCountByMethodAndEndpoint.containsKey(httpMethod)) {
+            requestCountByMethodAndEndpoint.put(httpMethod, new Map<String, Integer>());
+        }
+
+        Integer currentCount = requestCountByMethodAndEndpoint.get(httpMethod).get(endpoint) ?? 0;
+        requestCountByMethodAndEndpoint.get(httpMethod).put(endpoint, currentCount + 1);
     }
 
     public class HttpMethodNotMockedException extends Exception {}
