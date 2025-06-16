@@ -1,8 +1,12 @@
 /**
- * Copyright (c) 2024 Beyond The Cloud Sp. z o.o. (BeyondTheCloud.Dev)
+ * Copyright (c) 2025 Beyond The Cloud Sp. z o.o. (BeyondTheCloud.Dev)
  * Licensed under the MIT License (https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/LICENSE)
+ *
+ * PMD False Positives:
+ * - ExcessivePublicCount: It is a library class and exposes all necessary methods to construct a http mock.
 **/
 @IsTest
+@SuppressWarnings('PMD.ExcessivePublicCount')
 public class HttpMock implements HttpMockLib, HttpCalloutMock {
     /*
         new HttpMock()
@@ -63,57 +67,65 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
 
     // Implementation
 
-    private static Map<String, Map<String, HttpResponse>> mocks = new Map<String, Map<String, HttpResponse>>();
+    private static Map<String, Map<String, List<HttpResponse>>> mocks = new Map<String, Map<String, List<HttpResponse>>>();
     private static Map<String, Map<String, Integer>> requestCountByMethodAndEndpoint = new Map<String, Map<String, Integer>>();
 
     private HttpResponse workingHttpResponse = null;
 
     public HttpMock get(String endpointToMock) {
-        return add('GET', endpointToMock);
+        return this.add('GET', endpointToMock);
     }
 
     public HttpMock post(String endpointToMock) {
-        return add('POST', endpointToMock);
+        return this.add('POST', endpointToMock);
     }
 
     public HttpMock put(String endpointToMock) {
-        return add('PUT', endpointToMock);
+        return this.add('PUT', endpointToMock);
     }
 
     public HttpMock patch(String endpointToMock) {
-        return add('PATCH', endpointToMock);
+        return this.add('PATCH', endpointToMock);
     }
 
     public HttpMock deletex(String endpointToMock) {
-        return add('DELETE', endpointToMock);
+        return this.add('DELETE', endpointToMock);
     }
 
     public HttpMock trace(String endpointToMock) {
-        return add('TRACE', endpointToMock);
+        return this.add('TRACE', endpointToMock);
     }
 
     public HttpMock head(String endpointToMock) {
-        return add('HEAD', endpointToMock);
+        return this.add('HEAD', endpointToMock);
     }
 
     private HttpMock add(String httpMethod, String endpointToMock) {
-        if (!mocks.containsKey(httpMethod)) {
-            mocks.put(httpMethod, new Map<String, HttpResponse>());
-        }
+        this.initWhenEmpty(httpMethod, endpointToMock);
 
         this.workingHttpResponse = new HttpResponse();
 
-        body('{}');
-        contentTypeJson();
-        statusCodeOk();
+        this.body('{}');
+        this.contentTypeJson();
+        this.statusCodeOk();
 
-        mocks.get(httpMethod).put(endpointToMock, this.workingHttpResponse);
+        mocks.get(httpMethod).get(endpointToMock).add(this.workingHttpResponse);
 
         return this;
     }
 
+    private void initWhenEmpty(String httpMethod, String endpointToMock) {
+        if (!mocks.containsKey(httpMethod)) {
+            mocks.put(httpMethod, new Map<String, List<HttpResponse>>());
+        }
+
+        if (!mocks.get(httpMethod).containsKey(endpointToMock)) {
+            mocks.get(httpMethod).put(endpointToMock, new List<HttpResponse>());
+        }
+    }
+
     public HttpMock body(Object body) {
-        return body(JSON.serialize(body));
+        return this.body(JSON.serialize(body));
     }
 
     public HttpMock body(String body) {
@@ -127,35 +139,35 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpMock contentTypePlainText() {
-        return contentType('text/plain');
+        return this.contentType('text/plain');
     }
 
     public HttpMock contentTypeHtml() {
-        return contentType('text/html');
+        return this.contentType('text/html');
     }
 
     public HttpMock contentTypeCsv() {
-        return contentType('text/csv');
+        return this.contentType('text/csv');
     }
 
     public HttpMock contentTypeJson() {
-        return contentType('application/json');
+        return this.contentType('application/json');
     }
 
     public HttpMock contentTypePdf() {
-        return contentType('application/pdf');
+        return this.contentType('application/pdf');
     }
 
     public HttpMock contentTypeXml() {
-        return contentType('application/xml');
+        return this.contentType('application/xml');
     }
 
     public HttpMock contentTypeFormUrlencoded() {
-        return contentType('application/x-www-form-urlencoded');
+        return this.contentType('application/x-www-form-urlencoded');
     }
 
     public HttpMock contentType(String contentType) {
-        return header('Content-Type', contentType);
+        return this.header('Content-Type', contentType);
     }
 
     public HttpMock header(String key, String value) {
@@ -164,59 +176,59 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpMock statusCodeOk() {
-        return statusCode(200);
+        return this.statusCode(200);
     }
 
     public HttpMock statusCodeCreated() {
-        return statusCode(201);
+        return this.statusCode(201);
     }
 
     public HttpMock statusCodeAccepted() {
-        return statusCode(202);
+        return this.statusCode(202);
     }
 
     public HttpMock statusCodeNoContent() {
-        return statusCode(204);
+        return this.statusCode(204);
     }
 
     public HttpMock statusCodeBadRequest() {
-        return statusCode(400);
+        return this.statusCode(400);
     }
 
     public HttpMock statusCodeUnauthorized() {
-        return statusCode(401);
+        return this.statusCode(401);
     }
 
     public HttpMock statusCodeForbidden() {
-        return statusCode(403);
+        return this.statusCode(403);
     }
 
     public HttpMock statusCodeNotFound() {
-        return statusCode(404);
+        return this.statusCode(404);
     }
 
     public HttpMock statusCodeMethodNotAllowed() {
-        return statusCode(405);
+        return this.statusCode(405);
     }
 
     public HttpMock statusCodeInternalServerError() {
-        return statusCode(500);
+        return this.statusCode(500);
     }
 
     public HttpMock statusCodeNotImplemented() {
-        return statusCode(501);
+        return this.statusCode(501);
     }
 
     public HttpMock statusCodeBadGateway() {
-        return statusCode(502);
+        return this.statusCode(502);
     }
 
     public HttpMock statusCodeServiceUnavailable() {
-        return statusCode(503);
+        return this.statusCode(503);
     }
 
     public HttpMock statusCodeGatewayTimeout() {
-        return statusCode(504);
+        return this.statusCode(504);
     }
 
     public HttpMock statusCode(Integer statusCode) {
@@ -229,16 +241,29 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     }
 
     public HttpResponse respond(HttpRequest request) {
-        String closestMatchingMockedEndpoint = findClosestMatchingMockedEndpoint(request);
+        String closestMatchingMockedEndpoint = this.findClosestMatchingMockedEndpoint(request);
+
+        String requestEndpoint = request.getEndpoint();
 
         if (String.isBlank(closestMatchingMockedEndpoint)) {
-            throw new HttpEndpointNotMockedException('HTTP Endpoint ' + request.getEndpoint() + ' hasn\'t been mocked.');
+            throw new HttpEndpointNotMockedException('HTTP Endpoint ' + requestEndpoint + ' hasn\'t been mocked.');
         }
 
         String requestMethod = request.getMethod();
 
-        incrementRequestCount(requestMethod, closestMatchingMockedEndpoint);
-        return mocks.get(requestMethod).get(closestMatchingMockedEndpoint);
+        List<HttpResponse> mockedHttpResponses = mocks.get(requestMethod).get(closestMatchingMockedEndpoint);
+
+        if (mockedHttpResponses.isEmpty()) {
+            throw new HttpEndpointNotMockedException('HTTP Endpoint ' + requestMethod + ' ' + requestEndpoint +  ' hasn\'t been mocked.');
+        }
+
+        this.incrementRequestCount(requestMethod, closestMatchingMockedEndpoint);
+
+        if (mockedHttpResponses.size() > 1) {
+            return mockedHttpResponses.get(0);
+        }
+
+        return mockedHttpResponses.get(0);
     }
 
     private String findClosestMatchingMockedEndpoint(HttpRequest httpRequest) {
@@ -249,10 +274,10 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         }
 
         String httpRequestEndpoint = httpRequest.getEndpoint();
-        return findClosestMatchingMockedEndpoint(httpRequestEndpoint, mocks.get(httpRequestMethod).keySet());
+        return this.findClosestMatchingMockedEndpoint(httpRequestEndpoint, mocks.get(httpRequestMethod).keySet());
     }
 
-    public static String findClosestMatchingMockedEndpoint(String requestEndpoint, Set<String> mockedEndpoints) {
+    private String findClosestMatchingMockedEndpoint(String requestEndpoint, Set<String> mockedEndpoints) {
         String closestMatchingMockedEndpoint = null;
         Integer maxMatchLength = 0;
 
