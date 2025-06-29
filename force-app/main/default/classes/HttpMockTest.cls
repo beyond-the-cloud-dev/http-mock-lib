@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2024 Beyond The Cloud Sp. z o.o. (BeyondTheCloud.Dev)
+ * Copyright (c) 2025 Beyond The Cloud Sp. z o.o. (BeyondTheCloud.Dev)
  * Licensed under the MIT License (https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/LICENSE)
 **/
 @IsTest
@@ -7,7 +7,7 @@ private class HttpMockTest {
     @IsTest
     static void get() {
         new HttpMock()
-            .get('/api/v1')
+            .whenGetOn('/api/v1')
             .mock();
 
         Test.startTest();
@@ -21,7 +21,7 @@ private class HttpMockTest {
     @IsTest
     static void post() {
         new HttpMock()
-            .post('/api/v1')
+            .whenPostOn('/api/v1')
             .mock();
 
         Test.startTest();
@@ -35,7 +35,7 @@ private class HttpMockTest {
     @IsTest
     static void put() {
         new HttpMock()
-            .put('/api/v1')
+            .whenPutOn('/api/v1')
             .mock();
 
         Test.startTest();
@@ -49,7 +49,7 @@ private class HttpMockTest {
     @IsTest
     static void patch() {
          new HttpMock()
-            .patch('/api/v1')
+            .whenPatchOn('/api/v1')
             .mock();
 
         Test.startTest();
@@ -63,7 +63,7 @@ private class HttpMockTest {
     @IsTest
     static void head() {
          new HttpMock()
-            .head('/api/v1')
+            .whenHeadOn('/api/v1')
             .mock();
 
         Test.startTest();
@@ -79,7 +79,7 @@ private class HttpMockTest {
         Map<String, Object> mockedObject = new Map<String, Object>{ 'name' => 'test' };
 
         new HttpMock()
-            .get('/api/v1').body(mockedObject)
+            .whenGetOn('/api/v1').body(mockedObject)
             .mock();
 
         Test.startTest();
@@ -94,7 +94,7 @@ private class HttpMockTest {
         String mockedString = JSON.serialize(new Map<String, String>{ 'name' => 'test' });
 
         new HttpMock()
-            .get('/api/v1').body(mockedString)
+            .whenGetOn('/api/v1').body(mockedString)
             .mock();
 
         Test.startTest();
@@ -109,7 +109,7 @@ private class HttpMockTest {
         Blob mockedBlob = Blob.valueof('Test Blob');
 
         new HttpMock()
-            .get('/api/v1').body(mockedBlob)
+            .whenGetOn('/api/v1').body(mockedBlob)
             .mock();
 
         Test.startTest();
@@ -124,7 +124,7 @@ private class HttpMockTest {
         Integer mockedInteger = 1;
 
         new HttpMock()
-            .get('/api/v1').body(mockedInteger)
+            .whenGetOn('/api/v1').body(mockedInteger)
             .mock();
 
         Test.startTest();
@@ -137,7 +137,7 @@ private class HttpMockTest {
     @IsTest
     static void contentTypePlainText() {
         new HttpMock()
-            .get('/api/v1').contentTypePlainText()
+            .whenGetOn('/api/v1').contentTypePlainText()
             .mock();
 
         Test.startTest();
@@ -150,7 +150,7 @@ private class HttpMockTest {
     @IsTest
     static void contentTypeHtml() {
         new HttpMock()
-            .get('/api/v1').contentTypeHtml()
+            .whenGetOn('/api/v1').contentTypeHtml()
             .mock();
 
         Test.startTest();
@@ -163,7 +163,7 @@ private class HttpMockTest {
     @IsTest
     static void contentTypeCsv() {
         new HttpMock()
-            .get('/api/v1').contentTypeCsv()
+            .whenGetOn('/api/v1').contentTypeCsv()
             .mock();
 
         Test.startTest();
@@ -176,7 +176,7 @@ private class HttpMockTest {
     @IsTest
     static void contentTypeJson() {
         new HttpMock()
-            .get('/api/v1').contentTypeJson()
+            .whenGetOn('/api/v1').contentTypeJson()
             .mock();
 
         Test.startTest();
@@ -189,7 +189,7 @@ private class HttpMockTest {
     @IsTest
     static void contentTypePdf() {
         new HttpMock()
-            .get('/api/v1').contentTypePdf()
+            .whenGetOn('/api/v1').contentTypePdf()
             .mock();
 
         Test.startTest();
@@ -202,7 +202,7 @@ private class HttpMockTest {
     @IsTest
     static void contentTypeXml() {
         new HttpMock()
-            .get('/api/v1').contentTypeXml()
+            .whenGetOn('/api/v1').contentTypeXml()
             .mock();
 
         Test.startTest();
@@ -215,7 +215,7 @@ private class HttpMockTest {
     @IsTest
     static void contentTypeFormUrlencoded() {
         new HttpMock()
-            .get('/api/v1').contentTypeFormUrlencoded()
+            .whenGetOn('/api/v1').contentTypeFormUrlencoded()
             .mock();
 
         Test.startTest();
@@ -228,7 +228,7 @@ private class HttpMockTest {
     @IsTest
     static void customContentType() {
         new HttpMock()
-            .get('/api/v1').contentType('text/html')
+            .whenGetOn('/api/v1').contentType('text/html')
             .mock();
 
         Test.startTest();
@@ -241,7 +241,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeOk() {
         new HttpMock()
-            .get('/api/v1').statusCodeOk()
+            .whenGetOn('/api/v1').statusCodeOk()
             .mock();
 
         Test.startTest();
@@ -254,7 +254,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeCreated() {
         new HttpMock()
-            .get('/api/v1').statusCodeCreated()
+            .whenGetOn('/api/v1').statusCodeCreated()
             .mock();
 
         Test.startTest();
@@ -267,7 +267,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeAccepted() {
         new HttpMock()
-            .get('/api/v1').statusCodeAccepted()
+            .whenGetOn('/api/v1').statusCodeAccepted()
             .mock();
 
         Test.startTest();
@@ -280,7 +280,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeNoContent() {
         new HttpMock()
-            .get('/api/v1').statusCodeNoContent()
+            .whenGetOn('/api/v1').statusCodeNoContent()
             .mock();
 
         Test.startTest();
@@ -293,7 +293,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeBadRequest() {
         new HttpMock()
-            .get('/api/v1').statusCodeBadRequest()
+            .whenGetOn('/api/v1').statusCodeBadRequest()
             .mock();
 
         Test.startTest();
@@ -306,7 +306,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeUnauthorized() {
         new HttpMock()
-            .get('/api/v1').statusCodeUnauthorized()
+            .whenGetOn('/api/v1').statusCodeUnauthorized()
             .mock();
 
         Test.startTest();
@@ -319,7 +319,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeForbidden() {
         new HttpMock()
-            .get('/api/v1').statusCodeForbidden()
+            .whenGetOn('/api/v1').statusCodeForbidden()
             .mock();
 
         Test.startTest();
@@ -332,7 +332,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeNotFound() {
         new HttpMock()
-            .get('/api/v1').statusCodeNotFound()
+            .whenGetOn('/api/v1').statusCodeNotFound()
             .mock();
 
         Test.startTest();
@@ -345,7 +345,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeMethodNotAllowed() {
         new HttpMock()
-            .get('/api/v1').statusCodeMethodNotAllowed()
+            .whenGetOn('/api/v1').statusCodeMethodNotAllowed()
             .mock();
 
         Test.startTest();
@@ -358,7 +358,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeInternalServerError() {
         new HttpMock()
-            .get('/api/v1').statusCodeInternalServerError()
+            .whenGetOn('/api/v1').statusCodeInternalServerError()
             .mock();
 
         Test.startTest();
@@ -371,7 +371,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeNotImplemented() {
         new HttpMock()
-            .get('/api/v1').statusCodeNotImplemented()
+            .whenGetOn('/api/v1').statusCodeNotImplemented()
             .mock();
 
         Test.startTest();
@@ -384,7 +384,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeBadGateway() {
         new HttpMock()
-            .get('/api/v1').statusCodeBadGateway()
+            .whenGetOn('/api/v1').statusCodeBadGateway()
             .mock();
 
         Test.startTest();
@@ -397,7 +397,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeServiceUnavailable() {
         new HttpMock()
-            .get('/api/v1').statusCodeServiceUnavailable()
+            .whenGetOn('/api/v1').statusCodeServiceUnavailable()
             .mock();
 
         Test.startTest();
@@ -410,7 +410,7 @@ private class HttpMockTest {
     @IsTest
     static void statusCodeGatewayTimeout() {
         new HttpMock()
-            .get('/api/v1').statusCodeGatewayTimeout()
+            .whenGetOn('/api/v1').statusCodeGatewayTimeout()
             .mock();
 
         Test.startTest();
@@ -423,7 +423,7 @@ private class HttpMockTest {
     @IsTest
     static void customStatusCode() {
         new HttpMock()
-            .get('/api/v1').statusCode(403)
+            .whenGetOn('/api/v1').statusCode(403)
             .mock();
 
         Test.startTest();
@@ -436,7 +436,7 @@ private class HttpMockTest {
     @IsTest
     static void header() {
         new HttpMock()
-            .get('/api/v1').header('Cache-Control', 'no-cache')
+            .whenGetOn('/api/v1').header('Cache-Control', 'no-cache')
             .mock();
 
         Test.startTest();
@@ -449,8 +449,8 @@ private class HttpMockTest {
     @IsTest
     static void multipleCalloutMock() {
         new HttpMock()
-            .get('/api/v1').statusCodeOk()
-            .get('/api/v2').statusCodeNotFound()
+            .whenGetOn('/api/v1').statusCodeOk()
+            .whenGetOn('/api/v2').statusCodeNotFound()
             .mock();
 
         Test.startTest();
@@ -465,8 +465,8 @@ private class HttpMockTest {
     @IsTest
     static void multipleCalloutMockWithSubpath() {
         new HttpMock()
-            .get('/api/v1').statusCodeOk()
-            .get('/api/v1/abc123').statusCodeNotFound()
+            .whenGetOn('/api/v1').statusCodeOk()
+            .whenGetOn('/api/v1/abc123').statusCodeNotFound()
             .mock();
 
         Test.startTest();
@@ -481,8 +481,8 @@ private class HttpMockTest {
     @IsTest
     static void multipleCalloutMockWithSubpathAndRandomMocking() {
         new HttpMock()
-            .get('/api/v1').statusCodeNotFound()
-            .get('/api/v1/abc123').statusCodeOk()
+            .whenGetOn('/api/v1').statusCodeNotFound()
+            .whenGetOn('/api/v1/abc123').statusCodeOk()
             .mock();
 
         Test.startTest();
@@ -497,7 +497,7 @@ private class HttpMockTest {
     @IsTest
     static void multipleCalloutToTheSameEndpoint() {
         new HttpMock()
-            .get('/api/v1').statusCodeOk()
+            .whenGetOn('/api/v1').statusCodeOk()
             .mock();
 
         Test.startTest();
@@ -512,8 +512,8 @@ private class HttpMockTest {
     @IsTest
     static void multipleCalloutToTheSameEndpointWithDifferentResponses() {
         new HttpMock()
-            .get('/api/v1').statusCodeOk()
-            .get('/api/v1').statusCodeNotFound()
+            .whenGetOn('/api/v1').statusCodeOk()
+            .whenGetOn('/api/v1').statusCodeNotFound()
             .mock();
 
         Test.startTest();
@@ -527,7 +527,7 @@ private class HttpMockTest {
 
     @IsTest
     static void getRequestCount() {
-        new HttpMock().get('/api/v1').statusCodeOk().mock();
+        new HttpMock().whenGetOn('/api/v1').statusCodeOk().mock();
 
         Test.startTest();
         new TestApi().makeCallout('GET', '/api/v1');
@@ -540,7 +540,7 @@ private class HttpMockTest {
     @IsTest
     static void httpMethodNotMocked() {
         new HttpMock()
-            .get('/api/v1').statusCodeOk()
+            .whenGetOn('/api/v1').statusCodeOk()
             .mock();
 
         HttpMock.HttpMethodNotMockedException mockException = null;
@@ -560,7 +560,7 @@ private class HttpMockTest {
     @IsTest
     static void httpEndpointNotMocked() {
         new HttpMock()
-            .get('/api/v1').statusCodeOk()
+            .whenGetOn('/api/v1').statusCodeOk()
             .mock();
 
         HttpMock.HttpEndpointNotMockedException mockException = null;

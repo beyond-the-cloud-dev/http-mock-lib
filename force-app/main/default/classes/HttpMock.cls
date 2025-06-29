@@ -10,18 +10,18 @@
 public class HttpMock implements HttpMockLib, HttpCalloutMock {
     /*
         new HttpMock()
-            .get('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }').statusCodeOk()
-            .post('/api/v1/create').body('{ "success": true, "message": null }').statusCodeOk()
+            .whenGetOn('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }').contentTypeJson().statusCodeOk()
+            .whenPostOn('/api/v1/create').body('{ "success": true, "message": null }').contentTypeJson().statusCodeOk()
             .mock();
     */
     public interface HttpMockLib {
-        HttpMock get(String endpointToMock);
-        HttpMock post(String endpointToMock);
-        HttpMock put(String endpointToMock);
-        HttpMock patch(String endpointToMock);
-        HttpMock deletex(String endpointToMock);
-        HttpMock trace(String endpointToMock);
-        HttpMock head(String endpointToMock);
+        HttpMock whenGetOn(String endpointToMock);
+        HttpMock whenPostOn(String endpointToMock);
+        HttpMock whenPutOn(String endpointToMock);
+        HttpMock whenPatchOn(String endpointToMock);
+        HttpMock whenDeleteOn(String endpointToMock);
+        HttpMock whenTraceOn(String endpointToMock);
+        HttpMock whenHeadOn(String endpointToMock);
         // Body
         HttpMock body(Object body);
         HttpMock body(String body);
@@ -72,31 +72,31 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
 
     private HttpResponse workingHttpResponse = null;
 
-    public HttpMock get(String endpointToMock) {
+    public HttpMock whenGetOn(String endpointToMock) {
         return this.add('GET', endpointToMock);
     }
 
-    public HttpMock post(String endpointToMock) {
+    public HttpMock whenPostOn(String endpointToMock) {
         return this.add('POST', endpointToMock);
     }
 
-    public HttpMock put(String endpointToMock) {
+    public HttpMock whenPutOn(String endpointToMock) {
         return this.add('PUT', endpointToMock);
     }
 
-    public HttpMock patch(String endpointToMock) {
+    public HttpMock whenPatchOn(String endpointToMock) {
         return this.add('PATCH', endpointToMock);
     }
 
-    public HttpMock deletex(String endpointToMock) {
+    public HttpMock whenDeleteOn(String endpointToMock) {
         return this.add('DELETE', endpointToMock);
     }
 
-    public HttpMock trace(String endpointToMock) {
+    public HttpMock whenTraceOn(String endpointToMock) {
         return this.add('TRACE', endpointToMock);
     }
 
-    public HttpMock head(String endpointToMock) {
+    public HttpMock whenHeadOn(String endpointToMock) {
         return this.add('HEAD', endpointToMock);
     }
 
