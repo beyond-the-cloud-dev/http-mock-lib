@@ -14,8 +14,8 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(200, response.getStatusCode());
-        Assert.areEqual('{}', response.getBody());
+        Assert.areEqual(200, response.getStatusCode(), 'Status code should be 200');
+        Assert.areEqual('{}', response.getBody(), 'Body should be empty');
     }
 
     @IsTest
@@ -28,8 +28,8 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('POST', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(200, response.getStatusCode());
-        Assert.areEqual('{}', response.getBody());
+        Assert.areEqual(200, response.getStatusCode(), 'Status code should be 200');
+        Assert.areEqual('{}', response.getBody(), 'Body should be empty');
     }
 
     @IsTest
@@ -42,8 +42,8 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('PUT', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(200, response.getStatusCode());
-        Assert.areEqual('{}', response.getBody());
+        Assert.areEqual(200, response.getStatusCode(), 'Status code should be 200');
+        Assert.areEqual('{}', response.getBody(), 'Body should be empty');
     }
 
     @IsTest
@@ -56,8 +56,8 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('PATCH', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(200, response.getStatusCode());
-        Assert.areEqual('{}', response.getBody());
+        Assert.areEqual(200, response.getStatusCode(), 'Status code should be 200');
+        Assert.areEqual('{}', response.getBody(), 'Body should be empty');
     }
 
     @IsTest
@@ -70,8 +70,8 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('HEAD', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(200, response.getStatusCode());
-        Assert.areEqual('{}', response.getBody());
+        Assert.areEqual(200, response.getStatusCode(), 'Status code should be 200');
+        Assert.areEqual('{}', response.getBody(), 'Body should be empty');
     }
 
     @IsTest
@@ -86,7 +86,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(mockedObject, (Map<String, Object>) JSON.deserializeUntyped(response.getBody()));
+        Assert.areEqual(mockedObject, (Map<String, Object>) JSON.deserializeUntyped(response.getBody()), 'Body should be the same as the mocked object');
     }
 
     @IsTest
@@ -101,7 +101,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(mockedString, response.getBody());
+        Assert.areEqual(mockedString, response.getBody(), 'Body should be the same as the mocked string');
     }
 
     @IsTest
@@ -116,7 +116,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(mockedBlob, response.getBodyAsBlob());
+        Assert.areEqual(mockedBlob, response.getBodyAsBlob(), 'Body should be the same as the mocked blob');
     }
 
     @IsTest
@@ -131,7 +131,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(mockedInteger, Integer.valueOf(response.getBody()));
+        Assert.areEqual(mockedInteger, Integer.valueOf(response.getBody()), 'Body should be the same as the mocked integer');
     }
 
     @IsTest
@@ -144,7 +144,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual('text/plain', response.getHeader('Content-Type'));
+        Assert.areEqual('text/plain', response.getHeader('Content-Type'), 'Content type should be text/plain');
     }
 
     @IsTest
@@ -157,7 +157,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual('text/html', response.getHeader('Content-Type'));
+        Assert.areEqual('text/html', response.getHeader('Content-Type'), 'Content type should be text/html');
     }
 
     @IsTest
@@ -170,7 +170,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual('text/csv', response.getHeader('Content-Type'));
+        Assert.areEqual('text/csv', response.getHeader('Content-Type'), 'Content type should be text/csv');
     }
 
     @IsTest
@@ -183,7 +183,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual('application/json', response.getHeader('Content-Type'));
+        Assert.areEqual('application/json', response.getHeader('Content-Type'), 'Content type should be application/json');
     }
 
     @IsTest
@@ -196,7 +196,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual('application/pdf', response.getHeader('Content-Type'));
+        Assert.areEqual('application/pdf', response.getHeader('Content-Type'), 'Content type should be application/pdf');
     }
 
     @IsTest
@@ -209,7 +209,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual('application/xml', response.getHeader('Content-Type'));
+        Assert.areEqual('application/xml', response.getHeader('Content-Type'), 'Content type should be application/xml');
     }
 
     @IsTest
@@ -222,7 +222,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual('application/x-www-form-urlencoded', response.getHeader('Content-Type'));
+        Assert.areEqual('application/x-www-form-urlencoded', response.getHeader('Content-Type'), 'Content type should be application/x-www-form-urlencoded');
     }
 
     @IsTest
@@ -235,7 +235,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual('text/html', response.getHeader('Content-Type'));
+        Assert.areEqual('text/html', response.getHeader('Content-Type'), 'Content type should be text/html');
     }
 
     @IsTest
@@ -248,7 +248,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(200, response.getStatusCode());
+        Assert.areEqual(200, response.getStatusCode(), 'Status code should be 200');
     }
 
     @IsTest
@@ -261,7 +261,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(201, response.getStatusCode());
+        Assert.areEqual(201, response.getStatusCode(), 'Status code should be 201');
     }
 
     @IsTest
@@ -274,7 +274,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(202, response.getStatusCode());
+        Assert.areEqual(202, response.getStatusCode(), 'Status code should be 202');
     }
 
     @IsTest
@@ -287,7 +287,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(204, response.getStatusCode());
+        Assert.areEqual(204, response.getStatusCode(), 'Status code should be 204');
     }
 
     @IsTest
@@ -300,7 +300,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(400, response.getStatusCode());
+        Assert.areEqual(400, response.getStatusCode(), 'Status code should be 400');
     }
 
     @IsTest
@@ -313,7 +313,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(401, response.getStatusCode());
+        Assert.areEqual(401, response.getStatusCode(), 'Status code should be 401');
     }
 
     @IsTest
@@ -326,7 +326,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(403, response.getStatusCode());
+        Assert.areEqual(403, response.getStatusCode(), 'Status code should be 403');
     }
 
     @IsTest
@@ -339,7 +339,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(404, response.getStatusCode());
+        Assert.areEqual(404, response.getStatusCode(), 'Status code should be 404');
     }
 
     @IsTest
@@ -352,7 +352,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(405, response.getStatusCode());
+        Assert.areEqual(405, response.getStatusCode(), 'Status code should be 405');
     }
 
     @IsTest
@@ -365,7 +365,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(500, response.getStatusCode());
+        Assert.areEqual(500, response.getStatusCode(), 'Status code should be 500');
     }
 
     @IsTest
@@ -378,7 +378,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(501, response.getStatusCode());
+        Assert.areEqual(501, response.getStatusCode(), 'Status code should be 501'      );
     }
 
     @IsTest
@@ -391,7 +391,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(502, response.getStatusCode());
+        Assert.areEqual(502, response.getStatusCode(), 'Status code should be 502');
     }
 
     @IsTest
@@ -404,7 +404,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(503, response.getStatusCode());
+        Assert.areEqual(503, response.getStatusCode(), 'Status code should be 503');
     }
 
     @IsTest
@@ -417,7 +417,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(504, response.getStatusCode());
+        Assert.areEqual(504, response.getStatusCode(), 'Status code should be 504');
     }
 
     @IsTest
@@ -430,7 +430,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(403, response.getStatusCode());
+        Assert.areEqual(403, response.getStatusCode(), 'Status code should be 403');
     }
 
     @IsTest
@@ -443,7 +443,7 @@ private class HttpMockTest {
         HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual('no-cache', response.getHeader('Cache-Control'));
+        Assert.areEqual('no-cache', response.getHeader('Cache-Control'), 'Cache control header should be no-cache');
     }
 
     @IsTest
@@ -458,8 +458,8 @@ private class HttpMockTest {
         HttpResponse response2 = new TestApi().makeCallout('GET', '/api/v2');
         Test.stopTest();
 
-        Assert.areEqual(200, response1.getStatusCode());
-        Assert.areEqual(404, response2.getStatusCode());
+        Assert.areEqual(200, response1.getStatusCode(), 'Status code should be 200');
+        Assert.areEqual(404, response2.getStatusCode(), 'Status code should be 404');
     }
 
     @IsTest
@@ -474,8 +474,8 @@ private class HttpMockTest {
         HttpResponse response2 = new TestApi().makeCallout('GET', '/api/v1/abc123');
         Test.stopTest();
 
-        Assert.areEqual(200, response1.getStatusCode());
-        Assert.areEqual(404, response2.getStatusCode());
+        Assert.areEqual(200, response1.getStatusCode(), 'Status code should be 200');
+        Assert.areEqual(404, response2.getStatusCode(), 'Status code should be 404');
     }
 
     @IsTest
@@ -490,8 +490,8 @@ private class HttpMockTest {
         HttpResponse response2 = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(200, response1.getStatusCode());
-        Assert.areEqual(404, response2.getStatusCode());
+        Assert.areEqual(200, response1.getStatusCode(), 'Status code should be 200');
+        Assert.areEqual(404, response2.getStatusCode(), 'Status code should be 404');
     }
 
     @IsTest
@@ -505,8 +505,24 @@ private class HttpMockTest {
         HttpResponse response2 = new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(200, response1.getStatusCode());
-        Assert.areEqual(200, response2.getStatusCode());
+        Assert.areEqual(200, response1.getStatusCode(), 'Status code should be 200');
+        Assert.areEqual(200, response2.getStatusCode(), 'Status code should be 200');
+    }
+
+    @IsTest
+    static void multipleCalloutToTheSameEndpointWithDifferentResponses() {
+        new HttpMock()
+            .get('/api/v1').statusCodeOk()
+            .get('/api/v1').statusCodeNotFound()
+            .mock();
+
+        Test.startTest();
+        HttpResponse response1 = new TestApi().makeCallout('GET', '/api/v1');
+        HttpResponse response2 = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        Assert.areEqual(200, response1.getStatusCode(), 'Status code should be 200');
+        Assert.areEqual(404, response2.getStatusCode(), 'Status code should be 404');
     }
 
     @IsTest
@@ -518,7 +534,7 @@ private class HttpMockTest {
         new TestApi().makeCallout('GET', '/api/v1');
         Test.stopTest();
 
-        Assert.areEqual(2, HttpMock.getRequestCount('GET', '/api/v1'));
+        Assert.areEqual(2, HttpMock.getRequestCount('GET', '/api/v1'), 'Request count should be 2');
     }
 
     @IsTest
@@ -537,8 +553,8 @@ private class HttpMockTest {
         }
         Test.stopTest();
 
-        Assert.isNotNull(mockException);
-        Assert.areEqual('HTTP Method POST hasn\'t been mocked.', mockException.getMessage());
+        Assert.isNotNull(mockException, 'Mock exception should be thrown');
+        Assert.areEqual('HTTP Method POST hasn\'t been mocked.', mockException.getMessage(), 'Message should be HTTP Method POST hasn\'t been mocked.');
     }
 
     @IsTest
@@ -557,8 +573,8 @@ private class HttpMockTest {
         }
         Test.stopTest();
 
-        Assert.isNotNull(mockException);
-        Assert.areEqual('HTTP Endpoint /api/v2 hasn\'t been mocked.', mockException.getMessage());
+        Assert.isNotNull(mockException, 'Mock exception should be thrown');
+        Assert.areEqual('HTTP Endpoint /api/v2 hasn\'t been mocked.', mockException.getMessage(), 'Message should be HTTP Endpoint /api/v2 hasn\'t been mocked.');
     }
 
     private class TestApi {

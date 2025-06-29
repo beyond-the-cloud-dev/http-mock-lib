@@ -260,7 +260,7 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         this.incrementRequestCount(requestMethod, closestMatchingMockedEndpoint);
 
         if (mockedHttpResponses.size() > 1) {
-            return mockedHttpResponses.get(0);
+            return mockedHttpResponses.remove(0);
         }
 
         return mockedHttpResponses.get(0);
