@@ -23,7 +23,7 @@ Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
 
 ```java
 new HttpMock()
-  .get('/api/v1/authorize').body('{"example":"test"}').statusCodeOk()
+  .whenGetOn('/api/v1/authorize').body('{"example":"test"}').statusCodeOk()
   .mock();
 ```
 
@@ -35,8 +35,8 @@ private class MyTest {
   @IsTest
   static void calloutTest() {
     new HttpMock()
-      .get('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }').statusCodeOk()
-      .post('/api/v1/create').body('{ "success": true, "message": null }').statusCodeOk()
+      .whenGetOn('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }').statusCodeOk()
+      .whenPostOn('/api/v1/create').body('{ "success": true, "message": null }').statusCodeOk()
       .mock();
 
     Test.startTest();
@@ -53,13 +53,13 @@ private class MyTest {
 
 ```java
 public interface HttpMockLib {
-    HttpMock get(String endpointToMock);
-    HttpMock post(String endpointToMock);
-    HttpMock put(String endpointToMock);
-    HttpMock patch(String endpointToMock);
-    HttpMock deletex(String endpointToMock);
-    HttpMock trace(String endpointToMock);
-    HttpMock head(String endpointToMock);
+    HttpMock whenGetOn(String endpointToMock);
+    HttpMock whenPostOn(String endpointToMock);
+    HttpMock whenPutOn(String endpointToMock);
+    HttpMock whenPatchOn(String endpointToMock);
+    HttpMock whenDeleteOn(String endpointToMock);
+    HttpMock whenTraceOn(String endpointToMock);
+    HttpMock whenHeadOn(String endpointToMock);
     // Body
     HttpMock body(Object body);
     HttpMock body(String body);
@@ -104,8 +104,8 @@ Mock different HTTP methods in the same test method.
 
 ```java
 new HttpMock()
-    .get('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }').statusCodeOk()
-    .post('/api/v1/create').body('{ "success": true, "message": null }').statusCodeOk()
+    .whenGetOn('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }').statusCodeOk()
+    .whenPostOn('/api/v1/create').body('{ "success": true, "message": null }').statusCodeOk()
     .mock();
 ```
 
@@ -122,7 +122,7 @@ Supported methods:
 
 ```java
 new HttpMock()
-    .get('/api/v1').body(new Map<String, String>{ 'token' => 'aZ3Xb7Qk' }).statusCodeOk()
+    .whenGetOn('/api/v1').body(new Map<String, String>{ 'token' => 'aZ3Xb7Qk' }).statusCodeOk()
     .mock();
 ```
 
@@ -185,6 +185,6 @@ Set response headers using the `header(String key, String value)` method.
 
 ```java
 new HttpMock()
-    .get('/api/v1').body('{ "token": "aZ3Xb7Qk" }').header('Cache-Control', 'no-cache')
+    .whenGetOn('/api/v1').body('{ "token": "aZ3Xb7Qk" }').header('Cache-Control', 'no-cache')
     .mock();
 ```
