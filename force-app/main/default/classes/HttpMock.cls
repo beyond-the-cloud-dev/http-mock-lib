@@ -43,6 +43,8 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock contentTypePdf(); // application/pdf
         HttpMock contentTypeFormUrlencoded(); // application/x-www-form-urlencoded
         HttpMock contentType(String contentType);
+        // Static Resource
+        HttpMock staticResource(String staticResourceName);
         // Status Code
         HttpMock statusCodeOk(); // 200
         HttpMock statusCodeCreated(); // 201
@@ -219,6 +221,17 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         return this;
     }
 
+    public HttpMock staticResource(String staticResourceName) {
+        StaticResource staticResource = null;
+        try {
+            staticResource = [SELECT Body FROM StaticResource WHERE Name = :staticResourceName LIMIT 1];
+        } catch (QueryException queryEx) {
+            throw new StaticResourceNotFoundException('Static Resource "' + staticResourceName + '" not found.');
+        }
+        
+        return this.body(staticResource.Body);
+    }
+
     public HttpMock statusCodeOk() {
         return this.statusCode(200);
     }
@@ -346,4 +359,5 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
 
     public class HttpMethodNotMockedException extends Exception {}
     public class HttpEndpointNotMockedException extends Exception {}
+    public class StaticResourceNotFoundException extends Exception {}
 }

@@ -239,6 +239,50 @@ private class HttpMockTest {
     }
 
     @IsTest
+    static void staticResourceBody() {
+        String staticResourceName = 'responseBody';
+
+        new HttpMock()
+            .whenGetOn('/api/v1').staticResource(staticResourceName)
+            .mock();
+
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        SampleResponseBody responseBody = (SampleResponseBody) JSON.deserialize(response.getBody(), SampleResponseBody.class);
+        Assert.areEqual('responseBody', responseBody.name, 'Name should be responseBody');
+        Assert.areEqual(1, responseBody.order, 'Order should be 1');
+        Assert.isTrue(responseBody.active, 'Active should be true');
+        Assert.areEqual(new List<String>{'This is a sample JSON request body for API testing.'}, responseBody.additionalDetails, 'Additional details list should be the same');
+    }
+
+    class SampleResponseBody {
+        public String name;
+        public Integer order;
+        public Boolean active;
+        public List<String> additionalDetails;
+    }
+
+    @IsTest
+    static void staticResourceNotFound() {
+        String staticResourceName = 'aResourceThatDoesNotExist12345';
+
+        Test.startTest();
+        Exception caughtEx;
+        try {
+            new HttpMock()
+                .whenGetOn('/api/v1').staticResource(staticResourceName)
+                .mock();
+        } catch (Exception ex) {
+            caughtEx = ex;
+        }
+        Test.stopTest();           
+        
+        Assert.isInstanceOfType(caughtEx, HttpMock.StaticResourceNotFoundException.class, 'Exception should be StaticResourceNotFoundException');
+    }
+
+    @IsTest
     static void statusCodeOk() {
         new HttpMock()
             .whenGetOn('/api/v1').statusCodeOk()
