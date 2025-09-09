@@ -239,6 +239,50 @@ private class HttpMockTest {
     }
 
     @IsTest
+    static void staticResourceBody() {
+        String staticResourceName = 'responseBody';
+
+        new HttpMock()
+            .whenGetOn('/api/v1').staticResource(staticResourceName)
+            .mock();
+
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        SampleResponseBody responseBody = (SampleResponseBody) JSON.deserialize(response.getBody(), SampleResponseBody.class);
+        Assert.areEqual('responseBody', responseBody.name, 'Name should be responseBody');
+        Assert.areEqual(1, responseBody.order, 'Order should be 1');
+        Assert.isTrue(responseBody.active, 'Active should be true');
+        Assert.areEqual(new List<String>{'This is a sample JSON request body for API testing.'}, responseBody.additionalDetails, 'Additional details list should be the same');
+    }
+
+    class SampleResponseBody {
+        public String name;
+        public Integer order;
+        public Boolean active;
+        public List<String> additionalDetails;
+    }
+
+    @IsTest
+    static void staticResourceNotFound() {
+        String staticResourceName = 'aResourceThatDoesNotExist12345';
+
+        Test.startTest();
+        Exception caughtEx;
+        try {
+            new HttpMock()
+                .whenGetOn('/api/v1').staticResource(staticResourceName)
+                .mock();
+        } catch (Exception ex) {
+            caughtEx = ex;
+        }
+        Test.stopTest();           
+        
+        Assert.isInstanceOfType(caughtEx, HttpMock.StaticResourceNotFoundException.class, 'Exception should be StaticResourceNotFoundException');
+    }
+
+    @IsTest
     static void statusCodeOk() {
         new HttpMock()
             .whenGetOn('/api/v1').statusCodeOk()
@@ -535,6 +579,99 @@ private class HttpMockTest {
         Test.stopTest();
 
         Assert.areEqual(2, HttpMock.getRequestCount('GET', '/api/v1'), 'Request count should be 2');
+    }
+
+    @IsTest
+    static void getRequestCountWithMultipleEndpoints() {
+        new HttpMock()
+            .whenGetOn('/api/v1').statusCodeOk()
+            .whenGetOn('/api/v2').statusCodeOk()
+            .mock();
+
+        Test.startTest();
+        new TestApi().makeCallout('GET', '/api/v1');
+        new TestApi().makeCallout('GET', '/api/v2');
+        Test.stopTest();
+
+        Assert.areEqual(1, HttpMock.getRequestCount('GET', '/api/v1'), 'Request count should be 1');
+        Assert.areEqual(1, HttpMock.getRequestCount('GET', '/api/v2'), 'Request count should be 1');
+    }
+
+    @IsTest
+    static void getGetRequestsCount() {
+        new HttpMock().whenGetOn('/api/v1').statusCodeOk().mock();
+
+        Test.startTest();
+        new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        Assert.areEqual(1, HttpMock.getGetRequestsCount('/api/v1'), 'Request count should be 1');
+    }   
+
+    @IsTest
+    static void getPostRequestsCount() {
+        new HttpMock().whenPostOn('/api/v1').statusCodeOk().mock();
+
+        Test.startTest();
+        new TestApi().makeCallout('POST', '/api/v1');
+        Test.stopTest();
+
+        Assert.areEqual(1, HttpMock.getPostRequestsCount('/api/v1'), 'Request count should be 1');
+    }
+
+    @IsTest
+    static void getPutRequestsCount() {
+        new HttpMock().whenPutOn('/api/v1').statusCodeOk().mock();
+
+        Test.startTest();
+        new TestApi().makeCallout('PUT', '/api/v1');
+        Test.stopTest();
+
+        Assert.areEqual(1, HttpMock.getPutRequestsCount('/api/v1'), 'Request count should be 1');
+    }
+
+    @IsTest
+    static void getPatchRequestsCount() {
+        new HttpMock().whenPatchOn('/api/v1').statusCodeOk().mock();
+
+        Test.startTest();
+        new TestApi().makeCallout('PATCH', '/api/v1');
+        Test.stopTest();
+
+        Assert.areEqual(1, HttpMock.getPatchRequestsCount('/api/v1'), 'Request count should be 1');
+    }
+
+    @IsTest
+    static void getDeleteRequestsCount() {
+        new HttpMock().whenDeleteOn('/api/v1').statusCodeOk().mock();
+
+        Test.startTest();
+        new TestApi().makeCallout('DELETE', '/api/v1');
+        Test.stopTest();
+
+        Assert.areEqual(1, HttpMock.getDeleteRequestsCount('/api/v1'), 'Request count should be 1');
+    }   
+
+    @IsTest
+    static void getTraceRequestsCount() {
+        new HttpMock().whenTraceOn('/api/v1').statusCodeOk().mock();
+
+        Test.startTest();
+        new TestApi().makeCallout('TRACE', '/api/v1');
+        Test.stopTest();
+
+        Assert.areEqual(1, HttpMock.getTraceRequestsCount('/api/v1'), 'Request count should be 1');
+    }
+
+    @IsTest
+    static void getHeadRequestsCount() {
+        new HttpMock().whenHeadOn('/api/v1').statusCodeOk().mock();
+
+        Test.startTest();
+        new TestApi().makeCallout('HEAD', '/api/v1');
+        Test.stopTest();
+
+        Assert.areEqual(1, HttpMock.getHeadRequestsCount('/api/v1'), 'Request count should be 1');
     }
 
     @IsTest

@@ -9,10 +9,18 @@
 @SuppressWarnings('PMD.ExcessivePublicCount')
 public class HttpMock implements HttpMockLib, HttpCalloutMock {
     /*
-        new HttpMock()
+        new HttpMock
+            .getGetRequestsCount('/api/v1/authorize');
             .whenGetOn('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }').contentTypeJson().statusCodeOk()
             .whenPostOn('/api/v1/create').body('{ "success": true, "message": null }').contentTypeJson().statusCodeOk()
             .mock();
+
+        Test.startTest();
+        // ...
+        Test.stopTest();
+
+        Assert.areEqual(1, HttpMock.getGetRequestsCount('/api/v1/authorize'), 'One GET request should be made');
+        Assert.areEqual(1, HttpMock.getPostRequestsCount('/api/v1/create'), 'One POST request should be made');
     */
     public interface HttpMockLib {
         HttpMock whenGetOn(String endpointToMock);
@@ -35,6 +43,8 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock contentTypePdf(); // application/pdf
         HttpMock contentTypeFormUrlencoded(); // application/x-www-form-urlencoded
         HttpMock contentType(String contentType);
+        // Static Resource
+        HttpMock staticResource(String staticResourceName);
         // Status Code
         HttpMock statusCodeOk(); // 200
         HttpMock statusCodeCreated(); // 201
@@ -55,6 +65,42 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock header(String key, String value);
         // Mock
         void mock();
+        // Request Counts (static) for assertions
+        Integer getGetRequestsCount(String endpoint);
+        Integer getPostRequestsCount(String endpoint);
+        Integer getPutRequestsCount(String endpoint);
+        Integer getPatchRequestsCount(String endpoint);
+        Integer getDeleteRequestsCount(String endpoint);
+        Integer getTraceRequestsCount(String endpoint);
+        Integer getHeadRequestsCount(String endpoint);
+    }
+
+    public static Integer getGetRequestsCount(String endpoint) {
+        return getRequestCount('GET', endpoint);
+    }
+
+    public static Integer getPostRequestsCount(String endpoint) {
+        return getRequestCount('POST', endpoint);
+    }
+
+    public static Integer getPutRequestsCount(String endpoint) {
+        return getRequestCount('PUT', endpoint);
+    }
+
+    public static Integer getPatchRequestsCount(String endpoint) {
+        return getRequestCount('PATCH', endpoint);
+    }
+
+    public static Integer getDeleteRequestsCount(String endpoint) {
+        return getRequestCount('DELETE', endpoint);
+    }
+
+    public static Integer getTraceRequestsCount(String endpoint) {
+        return getRequestCount('TRACE', endpoint);
+    }
+
+    public static Integer getHeadRequestsCount(String endpoint) {
+        return getRequestCount('HEAD', endpoint);
     }
 
     public static Integer getRequestCount(String httpMethod, String endpoint) {
@@ -173,6 +219,17 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
     public HttpMock header(String key, String value) {
         this.workingHttpResponse.setHeader(key, value);
         return this;
+    }
+
+    public HttpMock staticResource(String staticResourceName) {
+        StaticResource staticResource = null;
+        try {
+            staticResource = [SELECT Body FROM StaticResource WHERE Name = :staticResourceName LIMIT 1];
+        } catch (QueryException queryEx) {
+            throw new StaticResourceNotFoundException('Static Resource "' + staticResourceName + '" not found.');
+        }
+        
+        return this.body(staticResource.Body);
     }
 
     public HttpMock statusCodeOk() {
@@ -302,4 +359,5 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
 
     public class HttpMethodNotMockedException extends Exception {}
     public class HttpEndpointNotMockedException extends Exception {}
+    public class StaticResourceNotFoundException extends Exception {}
 }
