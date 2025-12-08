@@ -44,7 +44,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: beyond-the-cloud-dev/dml-lib
+          slug: beyond-the-cloud-dev/http-mock-lib
           flags: Apex
 
       - name: Delete scratch org
