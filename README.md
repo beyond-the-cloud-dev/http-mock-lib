@@ -1,4 +1,13 @@
-# Http Mock Lib
+<div align="center">
+  <h1>Http Mock Lib</h1>
+
+<a href="https://beyondthecloud.dev"><img alt="Beyond The Cloud logo" src="https://img.shields.io/badge/MADE_BY_BEYOND_THE_CLOUD-555?style=for-the-badge"></a>
+<a ><img alt="API version" src="https://img.shields.io/badge/api-v57.0-blue?style=for-the-badge"></a>
+<a href="https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-mit-green?style=for-the-badge"></a>
+
+[![CI](https://github.com/beyond-the-cloud-dev/http-mock-lib/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/beyond-the-cloud-dev/http-mock-lib/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/beyond-the-cloud-dev/http-mock-lib/branch/main/graph/badge.svg)](https://codecov.io/gh/beyond-the-cloud-dev/http-mock-lib)
+</div>
 
 HTTP Mock inspired by Robert Sösemann’s [Apex Http Mock](https://github.com/rsoesemann/apex-httpmock).
 
@@ -102,7 +111,7 @@ public interface HttpMockLib {
 
 ### Mock different HTTP methods
 
-Mock different HTTP methods in the same test method.  
+Mock different HTTP methods in the same test method.
 
 ```java
 new HttpMock()
@@ -152,7 +161,7 @@ HttpMock contentTypeFormUrlencoded(); // application/x-www-form-urlencoded
 HttpMock contentType(String contentType);
 ```
 
-Use `contentType(String contentType)` to set your own content type. 
+Use `contentType(String contentType)` to set your own content type.
 
 ### Use built-in Status Codes
 
@@ -179,7 +188,7 @@ HttpMock statusCodeGatewayTimeout(); // 504
 HttpMock statusCode(Integer statusCode);
 ```
 
-Use `statusCode(Integer statusCode)` to set your own status code. 
+Use `statusCode(Integer statusCode)` to set your own status code.
 
 ### Set custom headers
 
