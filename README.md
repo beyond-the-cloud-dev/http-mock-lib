@@ -1,5 +1,11 @@
 <div align="center">
-  <h1>Http Mock Lib</h1>
+  <a href="https://async.beyondthecloud.dev">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./assets/http-mock-lib.png">
+      <img alt="Async Lib logo" src="./assets/http-mock-lib.png" height="98">
+    </picture>
+  </a>
+  <h1>HTTP Mock Lib</h1>
 
 <a href="https://beyondthecloud.dev"><img alt="Beyond The Cloud logo" src="https://img.shields.io/badge/MADE_BY_BEYOND_THE_CLOUD-555?style=for-the-badge"></a>
 <a ><img alt="API version" src="https://img.shields.io/badge/api-v64.0-blue?style=for-the-badge"></a>
