@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://async.beyondthecloud.dev">
+  <a href="https://apexfluently.beyondthecloud.dev/libraries/http-mock-lib.html">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./assets/http-mock-lib.png">
       <img alt="Async Lib logo" src="./assets/http-mock-lib.png" height="98">
