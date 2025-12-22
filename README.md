@@ -1,8 +1,8 @@
 <div align="center">
   <a href="https://apexfluently.beyondthecloud.dev/libraries/http-mock-lib.html">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="./assets/http-mock-lib.png">
-      <img alt="Async Lib logo" src="./assets/http-mock-lib.png" height="98">
+      <source media="(prefers-color-scheme: dark)" srcset="./website/public/logo.png">
+      <img alt="HTTP Mock Lib logo" src="./website/public/logo.png" height="98">
     </picture>
   </a>
   <h1>HTTP Mock Lib</h1>
