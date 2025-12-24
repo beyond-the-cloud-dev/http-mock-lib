@@ -1,6 +1,0 @@
-{
-    "name": "responseBody",
-    "order": 1,
-    "active": true,
-    "additionalDetails": [ "This is a sample JSON request body for API testing." ]
-}

@@ -34,6 +34,8 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock body(Object body);
         HttpMock body(String body);
         HttpMock body(Blob body);
+        // Static Resource
+        HttpMock staticResource(String staticResourceName);
         // Content-Type
         HttpMock contentTypePlainText(); // text/plain
         HttpMock contentTypeHtml(); // text/html
@@ -43,8 +45,6 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         HttpMock contentTypePdf(); // application/pdf
         HttpMock contentTypeFormUrlencoded(); // application/x-www-form-urlencoded
         HttpMock contentType(String contentType);
-        // Static Resource
-        HttpMock staticResource(String staticResourceName);
         // Status Code
         HttpMock statusCodeOk(); // 200
         HttpMock statusCodeCreated(); // 201
@@ -223,6 +223,7 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
 
     public HttpMock staticResource(String staticResourceName) {
         StaticResource staticResource = null;
+
         try {
             staticResource = [SELECT Body FROM StaticResource WHERE Name = :staticResourceName LIMIT 1];
         } catch (QueryException queryEx) {

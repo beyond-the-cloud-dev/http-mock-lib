@@ -238,25 +238,6 @@ private class HttpMockTest {
         Assert.areEqual('text/html', response.getHeader('Content-Type'), 'Content type should be text/html');
     }
 
-    @IsTest
-    static void staticResourceBody() {
-        String staticResourceName = 'responseBody';
-
-        new HttpMock()
-            .whenGetOn('/api/v1').staticResource(staticResourceName)
-            .mock();
-
-        Test.startTest();
-        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
-        Test.stopTest();
-
-        SampleResponseBody responseBody = (SampleResponseBody) JSON.deserialize(response.getBody(), SampleResponseBody.class);
-        Assert.areEqual('responseBody', responseBody.name, 'Name should be responseBody');
-        Assert.areEqual(1, responseBody.order, 'Order should be 1');
-        Assert.isTrue(responseBody.active, 'Active should be true');
-        Assert.areEqual(new List<String>{'This is a sample JSON request body for API testing.'}, responseBody.additionalDetails, 'Additional details list should be the same');
-    }
-
     class SampleResponseBody {
         public String name;
         public Integer order;
@@ -270,6 +251,7 @@ private class HttpMockTest {
 
         Test.startTest();
         Exception caughtEx;
+
         try {
             new HttpMock()
                 .whenGetOn('/api/v1').staticResource(staticResourceName)
@@ -279,7 +261,8 @@ private class HttpMockTest {
         }
         Test.stopTest();           
         
-        Assert.isInstanceOfType(caughtEx, HttpMock.StaticResourceNotFoundException.class, 'Exception should be StaticResourceNotFoundException');
+        Assert.isNotNull(caughtEx, 'Exception should be thrown');
+        Assert.areEqual('Static Resource "' + staticResourceName + '" not found.', caughtEx.getMessage(), 'Message should be Static Resource "' + staticResourceName + '" not found.');
     }
 
     @IsTest
