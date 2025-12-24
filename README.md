@@ -1,6 +1,23 @@
-# Http Mock Lib
+<div align="center">
+  <a href="https://apexfluently.beyondthecloud.dev/libraries/http-mock-lib.html">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./website/public/logo.png">
+      <img alt="HTTP Mock Lib logo" src="./website/public/logo.png" height="98">
+    </picture>
+  </a>
+  <h1>HTTP Mock Lib</h1>
+
+<a href="https://beyondthecloud.dev"><img alt="Beyond The Cloud logo" src="https://img.shields.io/badge/MADE_BY_BEYOND_THE_CLOUD-555?style=for-the-badge"></a>
+<a ><img alt="API version" src="https://img.shields.io/badge/api-v64.0-blue?style=for-the-badge"></a>
+<a href="https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-mit-green?style=for-the-badge"></a>
+
+[![CI](https://github.com/beyond-the-cloud-dev/http-mock-lib/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/beyond-the-cloud-dev/http-mock-lib/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/beyond-the-cloud-dev/http-mock-lib/branch/main/graph/badge.svg)](https://codecov.io/gh/beyond-the-cloud-dev/http-mock-lib)
+</div>
 
 HTTP Mock inspired by Robert Sösemann’s [Apex Http Mock](https://github.com/rsoesemann/apex-httpmock).
+
+HTTP Mock Lib is part of [Apex Fluently](https://apexfluently.beyondthecloud.dev/), a suite of production-ready Salesforce libraries by Beyond the Cloud.
 
 ❌❌❌
 
@@ -100,7 +117,7 @@ public interface HttpMockLib {
 
 ### Mock different HTTP methods
 
-Mock different HTTP methods in the same test method.  
+Mock different HTTP methods in the same test method.
 
 ```java
 new HttpMock()
@@ -150,7 +167,7 @@ HttpMock contentTypeFormUrlencoded(); // application/x-www-form-urlencoded
 HttpMock contentType(String contentType);
 ```
 
-Use `contentType(String contentType)` to set your own content type. 
+Use `contentType(String contentType)` to set your own content type.
 
 ### Use built-in Status Codes
 
@@ -177,7 +194,7 @@ HttpMock statusCodeGatewayTimeout(); // 504
 HttpMock statusCode(Integer statusCode);
 ```
 
-Use `statusCode(Integer statusCode)` to set your own status code. 
+Use `statusCode(Integer statusCode)` to set your own status code.
 
 ### Set custom headers
 
