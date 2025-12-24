@@ -7,10 +7,9 @@
 **/
 @IsTest
 @SuppressWarnings('PMD.ExcessivePublicCount')
-public class HttpMock implements HttpMockLib, HttpCalloutMock {
+public class HttpMock implements HttpStubbing, HttpCalloutMock {
     /*
         new HttpMock
-            .getGetRequestsCount('/api/v1/authorize');
             .whenGetOn('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }').contentTypeJson().statusCodeOk()
             .whenPostOn('/api/v1/create').body('{ "success": true, "message": null }').contentTypeJson().statusCodeOk()
             .mock();
@@ -19,87 +18,87 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         // ...
         Test.stopTest();
 
-        Assert.areEqual(1, HttpMock.getGetRequestsCount('/api/v1/authorize'), 'One GET request should be made');
-        Assert.areEqual(1, HttpMock.getPostRequestsCount('/api/v1/create'), 'One POST request should be made');
+        Assert.areEqual(1, HttpMock.requestsTo('/api/v1/authorize').get(), 'One GET request should be made');
+        Assert.areEqual(1, HttpMock.requestsTo('/api/v1/create').post(), 'One POST request should be made');
     */
-    public interface HttpMockLib {
-        HttpMock whenGetOn(String endpointToMock);
-        HttpMock whenPostOn(String endpointToMock);
-        HttpMock whenPutOn(String endpointToMock);
-        HttpMock whenPatchOn(String endpointToMock);
-        HttpMock whenDeleteOn(String endpointToMock);
-        HttpMock whenTraceOn(String endpointToMock);
-        HttpMock whenHeadOn(String endpointToMock);
+    public interface HttpStubbing {
+        HttpStubbing whenGetOn(String endpointToMock);
+        HttpStubbing whenPostOn(String endpointToMock);
+        HttpStubbing whenPutOn(String endpointToMock);
+        HttpStubbing whenPatchOn(String endpointToMock);
+        HttpStubbing whenDeleteOn(String endpointToMock);
+        HttpStubbing whenTraceOn(String endpointToMock);
+        HttpStubbing whenHeadOn(String endpointToMock);
         // Body
-        HttpMock body(Object body);
-        HttpMock body(String body);
-        HttpMock body(Blob body);
+        HttpStubbing body(Object body);
+        HttpStubbing body(String body);
+        HttpStubbing body(Blob body);
         // Static Resource
-        HttpMock staticResource(String staticResourceName);
+        HttpStubbing staticResource(String staticResourceName);
         // Content-Type
-        HttpMock contentTypePlainText(); // text/plain
-        HttpMock contentTypeHtml(); // text/html
-        HttpMock contentTypeCsv(); // text/csv
-        HttpMock contentTypeJson(); // application/json
-        HttpMock contentTypeXml(); // application/xml
-        HttpMock contentTypePdf(); // application/pdf
-        HttpMock contentTypeFormUrlencoded(); // application/x-www-form-urlencoded
-        HttpMock contentType(String contentType);
+        HttpStubbing contentTypePlainText(); // text/plain
+        HttpStubbing contentTypeHtml(); // text/html
+        HttpStubbing contentTypeCsv(); // text/csv
+        HttpStubbing contentTypeJson(); // application/json
+        HttpStubbing contentTypeXml(); // application/xml
+        HttpStubbing contentTypePdf(); // application/pdf
+        HttpStubbing contentTypeFormUrlencoded(); // application/x-www-form-urlencoded
+        HttpStubbing contentType(String contentType);
         // Status Code
-        HttpMock statusCodeOk(); // 200
-        HttpMock statusCodeCreated(); // 201
-        HttpMock statusCodeAccepted(); // 202
-        HttpMock statusCodeNoContent(); // 204
-        HttpMock statusCodeBadRequest(); // 400
-        HttpMock statusCodeUnauthorized(); // 401
-        HttpMock statusCodeForbidden(); // 403
-        HttpMock statusCodeNotFound(); // 404
-        HttpMock statusCodeMethodNotAllowed(); // 405
-        HttpMock statusCodeInternalServerError(); // 500
-        HttpMock statusCodeNotImplemented(); // 501
-        HttpMock statusCodeBadGateway(); // 502
-        HttpMock statusCodeServiceUnavailable(); // 503
-        HttpMock statusCodeGatewayTimeout(); // 504
-        HttpMock statusCode(Integer statusCode);
+        HttpStubbing statusCodeOk(); // 200
+        HttpStubbing statusCodeCreated(); // 201
+        HttpStubbing statusCodeAccepted(); // 202
+        HttpStubbing statusCodeNoContent(); // 204
+        HttpStubbing statusCodeBadRequest(); // 400
+        HttpStubbing statusCodeUnauthorized(); // 401
+        HttpStubbing statusCodeForbidden(); // 403
+        HttpStubbing statusCodeNotFound(); // 404
+        HttpStubbing statusCodeMethodNotAllowed(); // 405
+        HttpStubbing statusCodeInternalServerError(); // 500
+        HttpStubbing statusCodeNotImplemented(); // 501
+        HttpStubbing statusCodeBadGateway(); // 502
+        HttpStubbing statusCodeServiceUnavailable(); // 503
+        HttpStubbing statusCodeGatewayTimeout(); // 504
+        HttpStubbing statusCode(Integer statusCode);
         // Headers
-        HttpMock header(String key, String value);
+        HttpStubbing header(String key, String value);
         // Mock
         void mock();
         // Request Counts (static) for assertions
-        Integer getGetRequestsCount(String endpoint);
-        Integer getPostRequestsCount(String endpoint);
-        Integer getPutRequestsCount(String endpoint);
-        Integer getPatchRequestsCount(String endpoint);
-        Integer getDeleteRequestsCount(String endpoint);
-        Integer getTraceRequestsCount(String endpoint);
-        Integer getHeadRequestsCount(String endpoint);
+        Integer getRequestsTo(String endpoint);
+        Integer postRequestsTo(String endpoint);
+        Integer putRequestsTo(String endpoint);
+        Integer patchRequestsTo(String endpoint);
+        Integer deleteRequestsTo(String endpoint);
+        Integer traceRequestsTo(String endpoint);
+        Integer headRequestsTo(String endpoint);
     }
 
-    public static Integer getGetRequestsCount(String endpoint) {
+    public static Integer getRequestsTo(String endpoint) {
         return getRequestCount('GET', endpoint);
     }
 
-    public static Integer getPostRequestsCount(String endpoint) {
+    public static Integer postRequestsTo(String endpoint) {
         return getRequestCount('POST', endpoint);
     }
 
-    public static Integer getPutRequestsCount(String endpoint) {
+    public static Integer putRequestsTo(String endpoint) {
         return getRequestCount('PUT', endpoint);
     }
 
-    public static Integer getPatchRequestsCount(String endpoint) {
+    public static Integer patchRequestsTo(String endpoint) {
         return getRequestCount('PATCH', endpoint);
     }
 
-    public static Integer getDeleteRequestsCount(String endpoint) {
+    public static Integer deleteRequestsTo(String endpoint) {
         return getRequestCount('DELETE', endpoint);
     }
 
-    public static Integer getTraceRequestsCount(String endpoint) {
+    public static Integer traceRequestsTo(String endpoint) {
         return getRequestCount('TRACE', endpoint);
     }
 
-    public static Integer getHeadRequestsCount(String endpoint) {
+    public static Integer headRequestsTo(String endpoint) {
         return getRequestCount('HEAD', endpoint);
     }
 
@@ -108,7 +107,7 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
             return 0;
         }
 
-        return requestCountByMethodAndEndpoint.get(httpMethod).get(endpoint) ?? 0;
+        return requestCountByMethodAndEndpoint?.get(httpMethod)?.get(endpoint) ?? 0;
     }
 
     // Implementation
@@ -118,35 +117,35 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
 
     private HttpResponse workingHttpResponse = null;
 
-    public HttpMock whenGetOn(String endpointToMock) {
+    public HttpStubbing whenGetOn(String endpointToMock) {
         return this.add('GET', endpointToMock);
     }
 
-    public HttpMock whenPostOn(String endpointToMock) {
+    public HttpStubbing whenPostOn(String endpointToMock) {
         return this.add('POST', endpointToMock);
     }
 
-    public HttpMock whenPutOn(String endpointToMock) {
+    public HttpStubbing whenPutOn(String endpointToMock) {
         return this.add('PUT', endpointToMock);
     }
 
-    public HttpMock whenPatchOn(String endpointToMock) {
+    public HttpStubbing whenPatchOn(String endpointToMock) {
         return this.add('PATCH', endpointToMock);
     }
 
-    public HttpMock whenDeleteOn(String endpointToMock) {
+    public HttpStubbing whenDeleteOn(String endpointToMock) {
         return this.add('DELETE', endpointToMock);
     }
 
-    public HttpMock whenTraceOn(String endpointToMock) {
+    public HttpStubbing whenTraceOn(String endpointToMock) {
         return this.add('TRACE', endpointToMock);
     }
 
-    public HttpMock whenHeadOn(String endpointToMock) {
+    public HttpStubbing whenHeadOn(String endpointToMock) {
         return this.add('HEAD', endpointToMock);
     }
 
-    private HttpMock add(String httpMethod, String endpointToMock) {
+    private HttpStubbing add(String httpMethod, String endpointToMock) {
         this.initWhenEmpty(httpMethod, endpointToMock);
 
         this.workingHttpResponse = new HttpResponse();
@@ -170,58 +169,58 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         }
     }
 
-    public HttpMock body(Object body) {
+    public HttpStubbing body(Object body) {
         return this.body(JSON.serialize(body));
     }
 
-    public HttpMock body(String body) {
+    public HttpStubbing body(String body) {
         this.workingHttpResponse.setBody(body);
         return this;
     }
 
-    public HttpMock body(Blob body) {
+    public HttpStubbing body(Blob body) {
         this.workingHttpResponse.setBodyAsBlob(body);
         return this;
     }
 
-    public HttpMock contentTypePlainText() {
+    public HttpStubbing contentTypePlainText() {
         return this.contentType('text/plain');
     }
 
-    public HttpMock contentTypeHtml() {
+    public HttpStubbing contentTypeHtml() {
         return this.contentType('text/html');
     }
 
-    public HttpMock contentTypeCsv() {
+    public HttpStubbing contentTypeCsv() {
         return this.contentType('text/csv');
     }
 
-    public HttpMock contentTypeJson() {
+    public HttpStubbing contentTypeJson() {
         return this.contentType('application/json');
     }
 
-    public HttpMock contentTypePdf() {
+    public HttpStubbing contentTypePdf() {
         return this.contentType('application/pdf');
     }
 
-    public HttpMock contentTypeXml() {
+    public HttpStubbing contentTypeXml() {
         return this.contentType('application/xml');
     }
 
-    public HttpMock contentTypeFormUrlencoded() {
+    public HttpStubbing contentTypeFormUrlencoded() {
         return this.contentType('application/x-www-form-urlencoded');
     }
 
-    public HttpMock contentType(String contentType) {
+    public HttpStubbing contentType(String contentType) {
         return this.header('Content-Type', contentType);
     }
 
-    public HttpMock header(String key, String value) {
+    public HttpStubbing header(String key, String value) {
         this.workingHttpResponse.setHeader(key, value);
         return this;
     }
 
-    public HttpMock staticResource(String staticResourceName) {
+    public HttpStubbing staticResource(String staticResourceName) {
         StaticResource staticResource = null;
 
         try {
@@ -233,63 +232,63 @@ public class HttpMock implements HttpMockLib, HttpCalloutMock {
         return this.body(staticResource.Body);
     }
 
-    public HttpMock statusCodeOk() {
+    public HttpStubbing statusCodeOk() {
         return this.statusCode(200);
     }
 
-    public HttpMock statusCodeCreated() {
+    public HttpStubbing statusCodeCreated() {
         return this.statusCode(201);
     }
 
-    public HttpMock statusCodeAccepted() {
+    public HttpStubbing statusCodeAccepted() {
         return this.statusCode(202);
     }
 
-    public HttpMock statusCodeNoContent() {
+    public HttpStubbing statusCodeNoContent() {
         return this.statusCode(204);
     }
 
-    public HttpMock statusCodeBadRequest() {
+    public HttpStubbing statusCodeBadRequest() {
         return this.statusCode(400);
     }
 
-    public HttpMock statusCodeUnauthorized() {
+    public HttpStubbing statusCodeUnauthorized() {
         return this.statusCode(401);
     }
 
-    public HttpMock statusCodeForbidden() {
+    public HttpStubbing statusCodeForbidden() {
         return this.statusCode(403);
     }
 
-    public HttpMock statusCodeNotFound() {
+    public HttpStubbing statusCodeNotFound() {
         return this.statusCode(404);
     }
 
-    public HttpMock statusCodeMethodNotAllowed() {
+    public HttpStubbing statusCodeMethodNotAllowed() {
         return this.statusCode(405);
     }
 
-    public HttpMock statusCodeInternalServerError() {
+    public HttpStubbing statusCodeInternalServerError() {
         return this.statusCode(500);
     }
 
-    public HttpMock statusCodeNotImplemented() {
+    public HttpStubbing statusCodeNotImplemented() {
         return this.statusCode(501);
     }
 
-    public HttpMock statusCodeBadGateway() {
+    public HttpStubbing statusCodeBadGateway() {
         return this.statusCode(502);
     }
 
-    public HttpMock statusCodeServiceUnavailable() {
+    public HttpStubbing statusCodeServiceUnavailable() {
         return this.statusCode(503);
     }
 
-    public HttpMock statusCodeGatewayTimeout() {
+    public HttpStubbing statusCodeGatewayTimeout() {
         return this.statusCode(504);
     }
 
-    public HttpMock statusCode(Integer statusCode) {
+    public HttpStubbing statusCode(Integer statusCode) {
         this.workingHttpResponse.setStatusCode(statusCode);
         return this;
     }

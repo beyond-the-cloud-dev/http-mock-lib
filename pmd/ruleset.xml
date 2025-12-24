@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="KlaviyoApexRuleset" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.net/ruleset_2_0_0.xsd" language="apex">
+    <description>Apex PMD ruleset for DML Lib.</description>
+
+    <rule ref="category/apex/bestpractices.xml"/>
+    <rule ref="category/apex/codestyle.xml"/>
+    <rule ref="category/apex/design.xml"/>
+
+    <rule ref="category/apex/documentation.xml">
+        <!-- Not needed; decreases the readability of the class -->
+        <exclude name="ApexDoc"/>
+    </rule>
+
+    <rule ref="category/apex/performance.xml"></rule>
+    <rule ref="category/apex/security.xml"/>
+</ruleset>
