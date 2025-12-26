@@ -1,8 +1,8 @@
 {
-  "name": "salesforce-repo",
+  "name": "http-mock-lib",
   "private": true,
   "version": "1.0.0",
-  "description": "Salesforce Repo",
+  "description": "HTTP Mock Lib",
   "scripts": {
     "lint": "eslint **/{aura,lwc}/**",
     "test": "npm run test:unit",

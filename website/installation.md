@@ -1,116 +1,43 @@
 # Installation
 
-This guide covers the different ways to install HTTP Mock Lib in your Salesforce org.
+## Install via Unlocked Package
 
-## Using Salesforce CLI
+<!--
+ sf package version create --package "HTTP Mock Lib" --target-dev-hub beyondthecloud-prod --installation-key-bypass --wait 30 --code-coverage
 
-The recommended way to install HTTP Mock Lib is using the Salesforce CLI.
+ sf package version promote --package "HTTP Mock Lib@1.2.0-1"  --target-dev-hub beyondthecloud-prod
+-->
 
-### 1. Install as an Unlocked Package
+Install the HTTP Mock Lib unlocked package with `btcdev` namespace to your Salesforce environment:
 
-```bash
-sf package install --package 0HoRG00000000XXXXXXX --target-org your-org-alias --wait 10
-```
+`/packaging/installPackage.apexp?p0=04tP6000002EJBJIA4`
 
-::: tip
-Replace `your-org-alias` with your org alias or username.
-:::
+[Install on Sandbox](https://test.salesforce.com/packaging/installPackage.apexp?p0=04tP6000002EJBJIA4)
 
-### 2. Deploy Source Code
+[Install on Production](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tP6000002EJBJIA4)
 
-Clone the repository and deploy directly:
+<!-- ## Install via Unmanaged Package
 
-```bash
-# Clone the repository
-git clone https://github.com/beyond-the-cloud-dev/http-mock-lib.git
-cd http-mock-lib
+Install the HTTP Mock Lib unmanaged package without namespace to your Salesforce environment:
 
-# Deploy to your org
-sf project deploy start --target-org your-org-alias
-```
+`/packaging/installPackage.apexp?p0=04tP6000000XXXXXXT`
 
-## Manual Installation
+[Install on Sandbox](https://test.salesforce.com/packaging/installPackage.apexp?p0=04tP6000000XXXXXXT)
 
-### Using Workbench
+[Install on Production](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tP6000000XXXXXXT) -->
 
-1. Download the source code from [GitHub](https://github.com/beyond-the-cloud-dev/http-mock-lib)
-2. Navigate to [Workbench](https://workbench.developerforce.com/)
-3. Login to your org
-4. Go to **Migration** → **Deploy**
-5. Select the `force-app` folder and deploy
+## Deploy via Button
 
-### Using Setup UI
+Click the button below to deploy HTTP Mock Lib to your environment.
 
-1. Copy the class code from [HttpMock.cls](https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/force-app/main/default/classes/HttpMock.cls)
-2. In your Salesforce org, go to **Setup** → **Apex Classes**
-3. Click **New**
-4. Paste the code and click **Save**
+<a href="https://githubsfdeploy.herokuapp.com?owner=beyond-the-cloud-dev&repo=http-mock-lib&ref=main">
+  <img alt="Deploy to Salesforce"
+       src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png">
+</a>
 
-## Dependencies
+## Copy and Deploy
 
-HTTP Mock Lib has **zero dependencies**. It's a standalone library that works out of the box.
+**Apex**
 
-## API Version
-
-HTTP Mock Lib requires Salesforce API version **64.0** or higher.
-
-## Verification
-
-To verify the installation, create a simple test:
-
-```apex
-@IsTest
-private class HttpMockVerificationTest {
-  @IsTest
-  static void verifyInstallation() {
-    new HttpMock()
-      .whenGetOn('/test')
-      .body('{"test": true}')
-      .statusCodeOk()
-      .mock();
-
-    // If this compiles and runs, installation is successful
-    Assert.isTrue(true);
-  }
-}
-```
-
-Run the test:
-
-```bash
-sf apex run test --class-names HttpMockVerificationTest --target-org your-org-alias
-```
-
-If the test passes, HTTP Mock Lib is installed correctly! ✅
-
-## Next Steps
-
-Now that you have HTTP Mock Lib installed, check out:
-
-- [Getting Started Guide](/getting-started)
-- [API Reference](/api/)
-- [Examples](/examples/basic)
-
-## Troubleshooting
-
-### API Version Error
-
-**Error:** `Invalid API version specified`
-
-**Solution:** Ensure your org supports API version 64.0 or higher. You can check this in Setup → API.
-
-### Deployment Fails
-
-**Error:** `Deployment failed`
-
-**Solution:**
-- Verify you have sufficient permissions
-- Check that your org is not at maximum capacity for Apex classes
-- Review any error messages for specific issues
-
-### Need Help?
-
-If you encounter any issues:
-- Check [GitHub Issues](https://github.com/beyond-the-cloud-dev/http-mock-lib/issues)
-- Create a new issue if your problem isn't listed
-- Contact [Beyond the Cloud](https://beyondthecloud.dev)
+- [`HttpMock.cls`](https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/force-app/main/default/classes/HttpMock.cls)
+- [`HttpMockTest.cls`](https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/force-app/main/default/classes/HttpMockTest.cls)

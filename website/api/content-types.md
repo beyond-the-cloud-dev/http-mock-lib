@@ -2,17 +2,17 @@
 
 Set the Content-Type header for your mocked responses.
 
-## Built-in Content Types
-
-HTTP Mock Lib provides semantic methods for common content types.
-
-### contentTypeJson()
-
 ```apex
-HttpMock contentTypeJson()  // application/json
+new HttpMock()
+  .whenGetOn('/api/users')
+  .body('{"users": []}')
+  .contentTypeJson()
+  .mock();
 ```
 
-Default content type. Used for JSON responses.
+## JSON
+
+`application/json` - Default content type.
 
 ```apex
 new HttpMock()
@@ -22,13 +22,9 @@ new HttpMock()
   .mock();
 ```
 
-### contentTypePlainText()
+## Plain Text
 
-```apex
-HttpMock contentTypePlainText()  // text/plain
-```
-
-Plain text responses.
+`text/plain`
 
 ```apex
 new HttpMock()
@@ -38,13 +34,9 @@ new HttpMock()
   .mock();
 ```
 
-### contentTypeHtml()
+## HTML
 
-```apex
-HttpMock contentTypeHtml()  // text/html
-```
-
-HTML responses.
+`text/html`
 
 ```apex
 new HttpMock()
@@ -54,30 +46,21 @@ new HttpMock()
   .mock();
 ```
 
-### contentTypeCsv()
+## CSV
 
-```apex
-HttpMock contentTypeCsv()  // text/csv
-```
-
-CSV data responses.
+`text/csv`
 
 ```apex
 new HttpMock()
   .whenGetOn('/api/export/users.csv')
-  .body('id,name,email\n1,John,john@example.com\n2,Jane,jane@example.com')
+  .body('id,name,email\n1,John,john@example.com')
   .contentTypeCsv()
-  .header('Content-Disposition', 'attachment; filename="users.csv"')
   .mock();
 ```
 
-### contentTypeXml()
+## XML
 
-```apex
-HttpMock contentTypeXml()  // application/xml
-```
-
-XML responses.
+`application/xml`
 
 ```apex
 new HttpMock()
@@ -87,13 +70,9 @@ new HttpMock()
   .mock();
 ```
 
-### contentTypePdf()
+## PDF
 
-```apex
-HttpMock contentTypePdf()  // application/pdf
-```
-
-PDF document responses.
+`application/pdf`
 
 ```apex
 Blob pdfData = generatePdfContent();
@@ -105,13 +84,9 @@ new HttpMock()
   .mock();
 ```
 
-### contentTypeFormUrlencoded()
+## Form URL Encoded
 
-```apex
-HttpMock contentTypeFormUrlencoded()  // application/x-www-form-urlencoded
-```
-
-Form-encoded data.
+`application/x-www-form-urlencoded`
 
 ```apex
 new HttpMock()
@@ -121,177 +96,27 @@ new HttpMock()
   .mock();
 ```
 
-## Custom Content Type
+## Custom
 
-For content types not covered by built-in methods:
-
-```apex
-HttpMock contentType(String contentType)
-```
-
-**Examples:**
+For content types not covered by built-in methods.
 
 ```apex
-// YAML
 new HttpMock()
   .whenGetOn('/api/config')
-  .body('key: value\nlist:\n  - item1\n  - item2')
+  .body('key: value')
   .contentType('application/x-yaml')
   .mock();
-
-// Protocol Buffers
-new HttpMock()
-  .whenGetOn('/api/data')
-  .body(protobufBlob)
-  .contentType('application/protobuf')
-  .mock();
-
-// Custom vendor type
-new HttpMock()
-  .whenGetOn('/api/custom')
-  .body('{"data": {}}')
-  .contentType('application/vnd.mycompany.v1+json')
-  .mock();
 ```
 
-## Default Content Type
+## Reference
 
-If not specified, HTTP Mock Lib uses `application/json`:
-
-```apex
-// These are equivalent:
-new HttpMock()
-  .whenGetOn('/api/users')
-  .body('{"users": []}')
-  .mock();
-
-new HttpMock()
-  .whenGetOn('/api/users')
-  .body('{"users": []}')
-  .contentTypeJson()  // Explicitly set
-  .mock();
-```
-
-## Content Type Reference
-
-| Content Type | Method | Usage |
-|-------------|--------|-------|
-| `application/json` | `contentTypeJson()` | JSON data (default) |
-| `text/plain` | `contentTypePlainText()` | Plain text |
-| `text/html` | `contentTypeHtml()` | HTML documents |
-| `text/csv` | `contentTypeCsv()` | CSV data |
-| `application/xml` | `contentTypeXml()` | XML data |
-| `application/pdf` | `contentTypePdf()` | PDF documents |
-| `application/x-www-form-urlencoded` | `contentTypeFormUrlencoded()` | Form data |
-| Custom | `contentType(String)` | Any MIME type |
-
-## Examples
-
-### JSON API Response
-
-```apex
-new HttpMock()
-  .whenGetOn('/api/v1/users')
-  .body('{"users": [], "total": 0}')
-  .contentTypeJson()
-  .statusCodeOk()
-  .mock();
-```
-
-### CSV Export
-
-```apex
-String csvData = 'Name,Email,Status\n' +
-                 'John Doe,john@example.com,Active\n' +
-                 'Jane Smith,jane@example.com,Active';
-
-new HttpMock()
-  .whenGetOn('/api/export')
-  .body(csvData)
-  .contentTypeCsv()
-  .header('Content-Disposition', 'attachment; filename="export.csv"')
-  .statusCodeOk()
-  .mock();
-```
-
-### XML SOAP Response
-
-```apex
-String soapResponse =
-  '<?xml version="1.0"?>' +
-  '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
-    '<soap:Body>' +
-      '<Response>Success</Response>' +
-    '</soap:Body>' +
-  '</soap:Envelope>';
-
-new HttpMock()
-  .whenPostOn('/soap/endpoint')
-  .body(soapResponse)
-  .contentType('application/soap+xml')
-  .statusCodeOk()
-  .mock();
-```
-
-### Binary File Download
-
-```apex
-Blob fileContent = Blob.valueOf('File content');
-
-new HttpMock()
-  .whenGetOn('/api/download/document.pdf')
-  .body(fileContent)
-  .contentTypePdf()
-  .header('Content-Length', String.valueOf(fileContent.size()))
-  .header('Content-Disposition', 'attachment; filename="document.pdf"')
-  .statusCodeOk()
-  .mock();
-```
-
-## Best Practices
-
-1. **Match Real APIs** - Use the same content type as the actual API
-
-2. **Set Explicitly** - Even though JSON is default, explicitly set content type for clarity
-
-3. **Use with Headers** - Combine with other headers like `Content-Disposition` for downloads
-
-4. **Validate Format** - Ensure your body format matches the content type
-
-## Common Patterns
-
-### API with Multiple Formats
-
-```apex
-// JSON endpoint
-new HttpMock()
-  .whenGetOn('/api/data?format=json')
-  .body('{"data": []}')
-  .contentTypeJson()
-  .mock();
-
-// XML endpoint
-new HttpMock()
-  .whenGetOn('/api/data?format=xml')
-  .body('<?xml version="1.0"?><data></data>')
-  .contentTypeXml()
-  .mock();
-```
-
-### File Upload Response
-
-```apex
-new HttpMock()
-  .whenPostOn('/api/upload')
-  .body('{"fileId": "abc123", "url": "https://cdn.example.com/abc123"}')
-  .contentTypeJson()
-  .statusCodeCreated()
-  .header('Location', '/api/files/abc123')
-  .mock();
-```
-
-## See Also
-
-- [Response Body →](/api/response-body)
-- [Headers →](/api/headers)
-- [Examples →](/examples/basic)
+| Content Type | Method |
+|-------------|--------|
+| `application/json` | `contentTypeJson()` |
+| `text/plain` | `contentTypePlainText()` |
+| `text/html` | `contentTypeHtml()` |
+| `text/csv` | `contentTypeCsv()` |
+| `application/xml` | `contentTypeXml()` |
+| `application/pdf` | `contentTypePdf()` |
+| `application/x-www-form-urlencoded` | `contentTypeFormUrlencoded()` |
+| Custom | `contentType(String)` |
