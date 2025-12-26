@@ -142,17 +142,3 @@ If not specified, HTTP Mock Lib uses these defaults:
 ## Thread Safety
 
 HTTP Mock Lib uses Salesforce's built-in `Test.setMock()` mechanism, which is thread-safe within test context.
-
-## Best Practices
-
-1. **Call `.mock()` last** - Always call `.mock()` as the final method to activate the mock
-2. **One mock per test** - Create a new HttpMock for each test method
-3. **Clear endpoint paths** - Use full paths like `/api/v1/users` instead of `/users`
-4. **Meaningful status codes** - Use appropriate status codes to test error handling
-5. **Realistic responses** - Use actual response formats from your APIs
-
-## See Also
-
-- [HTTP Methods →](/api/http-methods)
-- [Status Codes →](/api/status-codes)
-- [Examples →](/examples/basic)

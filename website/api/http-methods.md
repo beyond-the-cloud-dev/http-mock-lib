@@ -2,29 +2,17 @@
 
 Mock different HTTP methods for your endpoints.
 
-## Supported Methods
-
-HTTP Mock Lib supports all standard HTTP methods:
-
-- `GET` - Retrieve data
-- `POST` - Create resources
-- `PUT` - Update/replace resources
-- `PATCH` - Partially update resources
-- `DELETE` - Remove resources
-- `HEAD` - Get headers only
-- `TRACE` - Debug/diagnostic method
-
-## API
-
-### whenGetOn()
-
-Mock a GET request.
-
 ```apex
-HttpMock whenGetOn(String endpointToMock)
+new HttpMock()
+  .whenGetOn('/api/v1/users/123')
+  .whenPostOn('/api/v1/comments/')
+  .mock();
 ```
 
-**Example:**
+## GET
+
+Retrieve data.
+
 ```apex
 new HttpMock()
   .whenGetOn('/api/v1/users/123')
@@ -33,15 +21,10 @@ new HttpMock()
   .mock();
 ```
 
-### whenPostOn()
+## POST
 
-Mock a POST request.
+Create resources.
 
-```apex
-HttpMock whenPostOn(String endpointToMock)
-```
-
-**Example:**
 ```apex
 new HttpMock()
   .whenPostOn('/api/v1/users')
@@ -50,15 +33,10 @@ new HttpMock()
   .mock();
 ```
 
-### whenPutOn()
+## PUT
 
-Mock a PUT request.
+Update/replace resources.
 
-```apex
-HttpMock whenPutOn(String endpointToMock)
-```
-
-**Example:**
 ```apex
 new HttpMock()
   .whenPutOn('/api/v1/users/123')
@@ -67,15 +45,10 @@ new HttpMock()
   .mock();
 ```
 
-### whenPatchOn()
+## PATCH
 
-Mock a PATCH request.
+Partially update resources.
 
-```apex
-HttpMock whenPatchOn(String endpointToMock)
-```
-
-**Example:**
 ```apex
 new HttpMock()
   .whenPatchOn('/api/v1/users/123')
@@ -84,15 +57,10 @@ new HttpMock()
   .mock();
 ```
 
-### whenDeleteOn()
+## DELETE
 
-Mock a DELETE request.
+Remove resources.
 
-```apex
-HttpMock whenDeleteOn(String endpointToMock)
-```
-
-**Example:**
 ```apex
 new HttpMock()
   .whenDeleteOn('/api/v1/users/123')
@@ -100,15 +68,10 @@ new HttpMock()
   .mock();
 ```
 
-### whenHeadOn()
+## HEAD
 
-Mock a HEAD request.
+Get headers only.
 
-```apex
-HttpMock whenHeadOn(String endpointToMock)
-```
-
-**Example:**
 ```apex
 new HttpMock()
   .whenHeadOn('/api/v1/users/123')
@@ -117,15 +80,10 @@ new HttpMock()
   .mock();
 ```
 
-### whenTraceOn()
+## TRACE
 
-Mock a TRACE request.
+Debug/diagnostic method.
 
-```apex
-HttpMock whenTraceOn(String endpointToMock)
-```
-
-**Example:**
 ```apex
 new HttpMock()
   .whenTraceOn('/api/v1/debug')
@@ -142,25 +100,21 @@ You can mock multiple HTTP methods in a single test:
 @IsTest
 static void testCrudOperations() {
   new HttpMock()
-    // Create
     .whenPostOn('/api/v1/users')
       .body('{"id": "123"}')
       .statusCodeCreated()
-    // Read
     .whenGetOn('/api/v1/users/123')
       .body('{"id": "123", "name": "John"}')
       .statusCodeOk()
-    // Update
     .whenPutOn('/api/v1/users/123')
       .body('{"updated": true}')
       .statusCodeOk()
-    // Delete
     .whenDeleteOn('/api/v1/users/123')
       .statusCodeNoContent()
     .mock();
 
   Test.startTest();
-  // Your CRUD operations here
+  // Your callout here
   Test.stopTest();
 }
 ```
@@ -185,24 +139,3 @@ new HttpMock()
   .whenGetOn('https://api.example.com/v1/users')  // ❌ Wrong - includes domain
   .mock();
 ```
-
-## Best Practices
-
-1. **Use Full Paths** - Include API version in the path: `/api/v1/users` instead of `/users`
-
-2. **Match HTTP Semantics** - Use the correct method for the operation:
-   - `GET` for retrieval
-   - `POST` for creation
-   - `PUT` for full updates
-   - `PATCH` for partial updates
-   - `DELETE` for removal
-
-3. **Test All Methods** - If your service uses multiple HTTP methods, test them all
-
-4. **RESTful Patterns** - Follow REST conventions in your mocks to match real APIs
-
-## See Also
-
-- [Status Codes →](/api/status-codes)
-- [Response Body →](/api/response-body)
-- [Examples →](/examples/basic)

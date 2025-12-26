@@ -2,16 +2,16 @@
 
 Set HTTP status codes for your mocked responses.
 
-## Built-in Status Codes
-
-HTTP Mock Lib provides semantic methods for common HTTP status codes.
-
-### Success Codes (2xx)
-
-#### statusCodeOk()
 ```apex
-HttpMock statusCodeOk()  // 200
+new HttpMock()
+  .whenGetOn('/api/users')
+  .body('{"users": []}')
+  .statusCodeOk()
+  .mock();
 ```
+
+## 200 OK
+
 Standard success response.
 
 ```apex
@@ -22,10 +22,8 @@ new HttpMock()
   .mock();
 ```
 
-#### statusCodeCreated()
-```apex
-HttpMock statusCodeCreated()  // 201
-```
+## 201 Created
+
 Resource successfully created.
 
 ```apex
@@ -36,10 +34,8 @@ new HttpMock()
   .mock();
 ```
 
-#### statusCodeAccepted()
-```apex
-HttpMock statusCodeAccepted()  // 202
-```
+## 202 Accepted
+
 Request accepted for processing.
 
 ```apex
@@ -50,10 +46,8 @@ new HttpMock()
   .mock();
 ```
 
-#### statusCodeNoContent()
-```apex
-HttpMock statusCodeNoContent()  // 204
-```
+## 204 No Content
+
 Success with no response body.
 
 ```apex
@@ -63,12 +57,8 @@ new HttpMock()
   .mock();
 ```
 
-### Client Error Codes (4xx)
+## 400 Bad Request
 
-#### statusCodeBadRequest()
-```apex
-HttpMock statusCodeBadRequest()  // 400
-```
 Invalid request.
 
 ```apex
@@ -79,10 +69,8 @@ new HttpMock()
   .mock();
 ```
 
-#### statusCodeUnauthorized()
-```apex
-HttpMock statusCodeUnauthorized()  // 401
-```
+## 401 Unauthorized
+
 Authentication required.
 
 ```apex
@@ -93,10 +81,8 @@ new HttpMock()
   .mock();
 ```
 
-#### statusCodeForbidden()
-```apex
-HttpMock statusCodeForbidden()  // 403
-```
+## 403 Forbidden
+
 Access denied.
 
 ```apex
@@ -107,10 +93,8 @@ new HttpMock()
   .mock();
 ```
 
-#### statusCodeNotFound()
-```apex
-HttpMock statusCodeNotFound()  // 404
-```
+## 404 Not Found
+
 Resource not found.
 
 ```apex
@@ -121,10 +105,8 @@ new HttpMock()
   .mock();
 ```
 
-#### statusCodeMethodNotAllowed()
-```apex
-HttpMock statusCodeMethodNotAllowed()  // 405
-```
+## 405 Method Not Allowed
+
 HTTP method not supported.
 
 ```apex
@@ -135,12 +117,8 @@ new HttpMock()
   .mock();
 ```
 
-### Server Error Codes (5xx)
+## 500 Internal Server Error
 
-#### statusCodeInternalServerError()
-```apex
-HttpMock statusCodeInternalServerError()  // 500
-```
 Server error.
 
 ```apex
@@ -151,10 +129,8 @@ new HttpMock()
   .mock();
 ```
 
-#### statusCodeNotImplemented()
-```apex
-HttpMock statusCodeNotImplemented()  // 501
-```
+## 501 Not Implemented
+
 Functionality not implemented.
 
 ```apex
@@ -165,10 +141,8 @@ new HttpMock()
   .mock();
 ```
 
-#### statusCodeBadGateway()
-```apex
-HttpMock statusCodeBadGateway()  // 502
-```
+## 502 Bad Gateway
+
 Invalid response from upstream server.
 
 ```apex
@@ -179,10 +153,8 @@ new HttpMock()
   .mock();
 ```
 
-#### statusCodeServiceUnavailable()
-```apex
-HttpMock statusCodeServiceUnavailable()  // 503
-```
+## 503 Service Unavailable
+
 Service temporarily unavailable.
 
 ```apex
@@ -193,10 +165,8 @@ new HttpMock()
   .mock();
 ```
 
-#### statusCodeGatewayTimeout()
-```apex
-HttpMock statusCodeGatewayTimeout()  // 504
-```
+## 504 Gateway Timeout
+
 Gateway timeout.
 
 ```apex
@@ -207,99 +177,34 @@ new HttpMock()
   .mock();
 ```
 
-## Custom Status Codes
+## Custom
 
-For status codes not covered by built-in methods, use `statusCode()`:
+For status codes not covered by built-in methods.
 
-```apex
-HttpMock statusCode(Integer statusCode)
-```
-
-**Example:**
 ```apex
 new HttpMock()
   .whenGetOn('/api/users')
   .body('{"error": "Too many requests"}')
-  .statusCode(429)  // Custom: Too Many Requests
+  .statusCode(429)
   .mock();
 ```
 
-## Default Status Code
+## Reference
 
-If no status code is specified, HTTP Mock Lib uses **200 (OK)** by default:
-
-```apex
-// These are equivalent:
-new HttpMock()
-  .whenGetOn('/api/users')
-  .body('{"users": []}')
-  .mock();
-
-new HttpMock()
-  .whenGetOn('/api/users')
-  .body('{"users": []}')
-  .statusCodeOk()  // Explicitly set
-  .mock();
-```
-
-## Testing Error Handling
-
-Use error status codes to test how your code handles failures:
-
-```apex
-@IsTest
-static void testUnauthorizedError() {
-  // Arrange
-  new HttpMock()
-    .whenGetOn('/api/secure-data')
-    .body('{"error": "Unauthorized"}')
-    .statusCodeUnauthorized()
-    .mock();
-
-  // Act & Assert
-  Test.startTest();
-  try {
-    new ApiService().getSecureData();
-    Assert.fail('Expected CalloutException');
-  } catch (CalloutException e) {
-    Assert.isTrue(e.getMessage().contains('Unauthorized'));
-  }
-  Test.stopTest();
-}
-```
-
-## Complete Status Code Reference
-
-| Code | Method | Description |
-|------|--------|-------------|
-| 200 | `statusCodeOk()` | Success |
-| 201 | `statusCodeCreated()` | Resource created |
-| 202 | `statusCodeAccepted()` | Request accepted |
-| 204 | `statusCodeNoContent()` | Success, no content |
-| 400 | `statusCodeBadRequest()` | Bad request |
-| 401 | `statusCodeUnauthorized()` | Unauthorized |
-| 403 | `statusCodeForbidden()` | Forbidden |
-| 404 | `statusCodeNotFound()` | Not found |
-| 405 | `statusCodeMethodNotAllowed()` | Method not allowed |
-| 500 | `statusCodeInternalServerError()` | Server error |
-| 501 | `statusCodeNotImplemented()` | Not implemented |
-| 502 | `statusCodeBadGateway()` | Bad gateway |
-| 503 | `statusCodeServiceUnavailable()` | Service unavailable |
-| 504 | `statusCodeGatewayTimeout()` | Gateway timeout |
-| Custom | `statusCode(Integer)` | Any status code |
-
-## Best Practices
-
-1. **Use Semantic Methods** - Prefer `statusCodeOk()` over `statusCode(200)` for readability
-
-2. **Test Error Paths** - Don't just test success cases; mock error responses too
-
-3. **Match Real APIs** - Use status codes that match what the real API returns
-
-4. **Document Exceptions** - When testing error cases, document why you expect them
-
-## See Also
-
-- [HTTP Methods →](/api/http-methods)
-- [Error Handling Examples →](/examples/error-handling)
-- [Headers →](/api/headers)
+| Code | Method |
+|------|--------|
+| 200 | `statusCodeOk()` |
+| 201 | `statusCodeCreated()` |
+| 202 | `statusCodeAccepted()` |
+| 204 | `statusCodeNoContent()` |
+| 400 | `statusCodeBadRequest()` |
+| 401 | `statusCodeUnauthorized()` |
+| 403 | `statusCodeForbidden()` |
+| 404 | `statusCodeNotFound()` |
+| 405 | `statusCodeMethodNotAllowed()` |
+| 500 | `statusCodeInternalServerError()` |
+| 501 | `statusCodeNotImplemented()` |
+| 502 | `statusCodeBadGateway()` |
+| 503 | `statusCodeServiceUnavailable()` |
+| 504 | `statusCodeGatewayTimeout()` |
+| Custom | `statusCode(Integer)` |

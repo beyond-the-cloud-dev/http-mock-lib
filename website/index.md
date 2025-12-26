@@ -19,27 +19,27 @@ hero:
 features:
   - icon: 🎯
     title: Fluent API
-    details: Write clean, readable test mocks with a chainable, intuitive interface that makes your tests easy to understand.
+    details: Write clean, readable test mocks with a chainable, intuitive interface.
 
-  - icon: 🚀
-    title: Production Ready
-    details: Battle-tested in production environments. Part of Apex Fluently suite of enterprise-grade Salesforce libraries.
+  - icon: 🌐
+    title: All HTTP Methods
+    details: Mock GET, POST, PUT, PATCH, DELETE, HEAD, TRACE in one test.
 
-  - icon: 📝
-    title: Type Safe
-    details: Strongly typed methods prevent runtime errors and provide excellent IDE autocomplete support.
+  - icon: 📦
+    title: Flexible Responses
+    details: Return String, Object, or Blob bodies with JSON, XML, CSV, PDF, or custom content types.
 
-  - icon: 🔧
-    title: Flexible
-    details: Mock multiple endpoints, HTTP methods, status codes, headers, and content types all in one test.
+  - icon: 🔢
+    title: Built-in Status Codes
+    details: Use semantic methods like statusCodeOk(), statusCodeNotFound(), statusCodeCreated().
 
   - icon: ⚡
-    title: Lightweight
-    details: Zero dependencies, minimal footprint. Just one class to mock all your HTTP callouts.
+    title: Zero Dependencies
+    details: Lightweight, minimal footprint. Just one class to mock all your HTTP callouts.
 
   - icon: 🎓
     title: Easy to Learn
-    details: Straightforward API inspired by modern testing frameworks. Get started in minutes.
+    details: Get started in minutes with a straightforward, modern API.
 ---
 
 ## Why HTTP Mock Lib?
@@ -49,7 +49,7 @@ Traditional Salesforce HTTP mocking requires creating verbose mock classes for e
 ::: code-group
 
 ```apex [Before ❌]
-@isTest
+@IsTest
 global class MockHttpResponseGenerator implements HttpCalloutMock {
     global HTTPResponse respond(HTTPRequest req) {
         HttpResponse res = new HttpResponse();
@@ -72,43 +72,6 @@ new HttpMock()
 ```
 
 :::
-
-## Quick Example
-
-```apex
-@IsTest
-private class CalloutServiceTest {
-  @IsTest
-  static void testMultipleEndpoints() {
-    // Arrange
-    new HttpMock()
-      .whenGetOn('/api/v1/authorize')
-        .body('{ "token": "aZ3Xb7Qk" }')
-        .statusCodeOk()
-      .whenPostOn('/api/v1/create')
-        .body('{ "success": true, "message": null }')
-        .statusCodeCreated()
-      .mock();
-
-    // Act
-    Test.startTest();
-    CalloutResult result = new CalloutService().makeCallout();
-    Test.stopTest();
-
-    // Assert
-    Assert.isTrue(result.success);
-  }
-}
-```
-
-## Features at a Glance
-
-- ✅ **Mock Multiple Endpoints** - Handle GET, POST, PUT, PATCH, DELETE, HEAD, TRACE in one test
-- ✅ **Flexible Response Bodies** - Return String, Object, or Blob responses
-- ✅ **Built-in Status Codes** - Use semantic methods like `statusCodeOk()`, `statusCodeNotFound()`
-- ✅ **Content Type Support** - JSON, XML, CSV, PDF, and custom content types
-- ✅ **Custom Headers** - Add any headers your callout needs
-- ✅ **Zero Configuration** - Works out of the box, no setup required
 
 ## Part of Apex Fluently
 

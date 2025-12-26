@@ -9,8 +9,7 @@ export default defineConfig({
 
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Guide', link: '/getting-started' },
-      { text: 'API', link: '/api/' }
+      { text: 'Documentation', link: '/api/' }
     ],
 
     sidebar: [
@@ -31,27 +30,19 @@ export default defineConfig({
           { text: 'Status Codes', link: '/api/status-codes' },
           { text: 'Headers', link: '/api/headers' }
         ]
-      },
-      {
-        text: 'Examples',
-        items: [
-          { text: 'Basic Usage', link: '/examples/basic' },
-          { text: 'Multiple Endpoints', link: '/examples/multiple-endpoints' },
-          { text: 'Custom Headers', link: '/examples/custom-headers' },
-          { text: 'Error Handling', link: '/examples/error-handling' }
-        ]
       }
     ],
-
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/beyond-the-cloud-dev/http-mock-lib' }
+      { icon: 'github', link: 'https://github.com/beyond-the-cloud-dev/http-mock-lib' },
+      {
+        icon: 'linkedin',
+        link: 'https://www.linkedin.com/company/beyondtheclouddev'
+      }
     ],
-
     footer: {
       message: 'Part of <a href="https://apexfluently.beyondthecloud.dev">Apex Fluently</a>',
-      copyright: 'Copyright © 2024 <a href="https://beyondthecloud.dev">Beyond the Cloud</a>'
+      copyright: 'Copyright © 2025 <a href="https://beyondthecloud.dev">Beyond the Cloud</a>'
     },
-
     search: {
       provider: 'local'
     }
