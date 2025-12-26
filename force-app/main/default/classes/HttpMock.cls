@@ -4,14 +4,23 @@
  *
  * PMD False Positives:
  * - ExcessivePublicCount: It is a library class and exposes all necessary methods to construct a http mock.
+ * - FieldDeclarationsShouldBeAtStart: It is a library class and important methods are on the top.
+ * - CognitiveComplexity: It is a library class and the code is complex but it is necessary to keep it this way.
+ * - CyclomaticComplexity: It is a library class and the code is complex but it is necessary to keep it this way.
 **/
+@SuppressWarnings('PMD.ExcessivePublicCount,PMD.FieldDeclarationsShouldBeAtStart,PMD.CognitiveComplexity,PMD.CyclomaticComplexity')
 @IsTest
-@SuppressWarnings('PMD.ExcessivePublicCount')
-public class HttpMock implements HttpStubbing, HttpCalloutMock {
+global class HttpMock implements HttpStubbing, HttpCalloutMock {
     /*
         new HttpMock
-            .whenGetOn('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }').contentTypeJson().statusCodeOk()
-            .whenPostOn('/api/v1/create').body('{ "success": true, "message": null }').contentTypeJson().statusCodeOk()
+            .whenGetOn('/api/v1/authorize')
+            .body('{ "token": "aZ3Xb7Qk" }')
+            .contentTypeJson()
+            .statusCodeOk()
+            .whenPostOn('/api/v1/create')
+            .body('{ "success": true, "message": null }')
+            .contentTypeJson()
+            .statusCodeOk()
             .mock();
 
         Test.startTest();
@@ -21,7 +30,7 @@ public class HttpMock implements HttpStubbing, HttpCalloutMock {
         Assert.areEqual(1, HttpMock.requestsTo('/api/v1/authorize').get(), 'One GET request should be made');
         Assert.areEqual(1, HttpMock.requestsTo('/api/v1/create').post(), 'One POST request should be made');
     */
-    public interface HttpStubbing {
+    global interface HttpStubbing {
         HttpStubbing whenGetOn(String endpointToMock);
         HttpStubbing whenPostOn(String endpointToMock);
         HttpStubbing whenPutOn(String endpointToMock);
@@ -64,59 +73,32 @@ public class HttpMock implements HttpStubbing, HttpCalloutMock {
         HttpStubbing header(String key, String value);
         // Mock
         void mock();
-        // Request Counts (static) for assertions
-        Integer getRequestsTo(String endpoint);
-        Integer postRequestsTo(String endpoint);
-        Integer putRequestsTo(String endpoint);
-        Integer patchRequestsTo(String endpoint);
-        Integer deleteRequestsTo(String endpoint);
-        Integer traceRequestsTo(String endpoint);
-        Integer headRequestsTo(String endpoint);
     }
 
-    public static Integer getRequestsTo(String endpoint) {
-        return getRequestCount('GET', endpoint);
+    // Request Counts for assertions
+    global static Requests requestsTo(String endpoint) {
+        return HttpMock.requestsByEndpoint.get(endpoint) ?? new HttpMockRequests();
     }
 
-    public static Integer postRequestsTo(String endpoint) {
-        return getRequestCount('POST', endpoint);
-    }
+    global interface Requests {
+        Integer all();
 
-    public static Integer putRequestsTo(String endpoint) {
-        return getRequestCount('PUT', endpoint);
-    }
-
-    public static Integer patchRequestsTo(String endpoint) {
-        return getRequestCount('PATCH', endpoint);
-    }
-
-    public static Integer deleteRequestsTo(String endpoint) {
-        return getRequestCount('DELETE', endpoint);
-    }
-
-    public static Integer traceRequestsTo(String endpoint) {
-        return getRequestCount('TRACE', endpoint);
-    }
-
-    public static Integer headRequestsTo(String endpoint) {
-        return getRequestCount('HEAD', endpoint);
-    }
-
-    public static Integer getRequestCount(String httpMethod, String endpoint) {
-        if (!requestCountByMethodAndEndpoint.containsKey(httpMethod)) {
-            return 0;
-        }
-
-        return requestCountByMethodAndEndpoint?.get(httpMethod)?.get(endpoint) ?? 0;
+        Integer get();
+        Integer post();
+        Integer put();
+        Integer patch();
+        Integer deletex(); // delete is a reserved keyword
+        Integer trace();
+        Integer head();
     }
 
     // Implementation
 
     private static Map<String, Map<String, List<HttpResponse>>> mocks = new Map<String, Map<String, List<HttpResponse>>>();
-    private static Map<String, Map<String, Integer>> requestCountByMethodAndEndpoint = new Map<String, Map<String, Integer>>();
+    private static Map<String, HttpMockRequests> requestsByEndpoint = new Map<String, HttpMockRequests>();
 
     private HttpResponse workingHttpResponse = null;
-
+    
     public HttpStubbing whenGetOn(String endpointToMock) {
         return this.add('GET', endpointToMock);
     }
@@ -298,7 +280,7 @@ public class HttpMock implements HttpStubbing, HttpCalloutMock {
     }
 
     public HttpResponse respond(HttpRequest request) {
-        String closestMatchingMockedEndpoint = this.findClosestMatchingMockedEndpoint(request);
+        String closestMatchingMockedEndpoint = this.findClosestMatchingMockedEndpointBasedOnRequest(request);
 
         String requestEndpoint = request.getEndpoint();
 
@@ -314,7 +296,7 @@ public class HttpMock implements HttpStubbing, HttpCalloutMock {
             throw new HttpEndpointNotMockedException('HTTP Endpoint ' + requestMethod + ' ' + requestEndpoint +  ' hasn\'t been mocked.');
         }
 
-        this.incrementRequestCount(requestMethod, closestMatchingMockedEndpoint);
+        this.registerRequest(requestMethod, requestEndpoint);
 
         if (mockedHttpResponses.size() > 1) {
             return mockedHttpResponses.remove(0);
@@ -323,14 +305,22 @@ public class HttpMock implements HttpStubbing, HttpCalloutMock {
         return mockedHttpResponses.get(0);
     }
 
-    private String findClosestMatchingMockedEndpoint(HttpRequest httpRequest) {
+    private void registerRequest(String httpMethod, String endpoint) {
+        if (!requestsByEndpoint.containsKey(endpoint)) {
+            requestsByEndpoint.put(endpoint, new HttpMockRequests());
+        }
+
+        requestsByEndpoint.get(endpoint).incrementRequestCount(httpMethod);
+    }
+
+    private String findClosestMatchingMockedEndpointBasedOnRequest(HttpRequest httpRequest) {
         String httpRequestMethod = httpRequest.getMethod();
+        String httpRequestEndpoint = httpRequest.getEndpoint();
 
         if (!mocks.containsKey(httpRequestMethod)) {
             throw new HttpMethodNotMockedException('HTTP Method ' + httpRequestMethod + ' hasn\'t been mocked.');
         }
 
-        String httpRequestEndpoint = httpRequest.getEndpoint();
         return this.findClosestMatchingMockedEndpoint(httpRequestEndpoint, mocks.get(httpRequestMethod).keySet());
     }
 
@@ -348,13 +338,54 @@ public class HttpMock implements HttpStubbing, HttpCalloutMock {
         return closestMatchingMockedEndpoint;
     }
 
-    private void incrementRequestCount(String httpMethod, String endpoint) {
-        if (!requestCountByMethodAndEndpoint.containsKey(httpMethod)) {
-            requestCountByMethodAndEndpoint.put(httpMethod, new Map<String, Integer>());
+    private class HttpMockRequests implements Requests {
+        private Map<String, Integer> requestCountByMethod = new Map<String, Integer>();
+
+        public void incrementRequestCount(String httpMethod) {
+            if (!this.requestCountByMethod.containsKey(httpMethod)) {
+                this.requestCountByMethod.put(httpMethod, 0);
+            }
+    
+            this.requestCountByMethod.put(httpMethod, this.requestCountByMethod.get(httpMethod) + 1);
         }
 
-        Integer currentCount = requestCountByMethodAndEndpoint.get(httpMethod).get(endpoint) ?? 0;
-        requestCountByMethodAndEndpoint.get(httpMethod).put(endpoint, currentCount + 1);
+        public Integer all() {
+            Integer total = 0;
+
+            for (Integer count : this.requestCountByMethod.values()) {
+                total += count;
+            }
+
+            return total;
+        }
+
+        public Integer get() {
+            return this.requestCountByMethod.get('GET') ?? 0;
+        }
+
+        public Integer post() {
+            return this.requestCountByMethod.get('POST') ?? 0;
+        }
+        
+        public Integer put() {
+            return this.requestCountByMethod.get('PUT') ?? 0;
+        }
+
+        public Integer patch() {
+            return this.requestCountByMethod.get('PATCH') ?? 0;
+        }
+        
+        public Integer deletex() {
+            return this.requestCountByMethod.get('DELETE') ?? 0;
+        }
+
+        public Integer trace() {
+            return this.requestCountByMethod.get('TRACE') ?? 0;
+        }
+        
+        public Integer head() {
+            return this.requestCountByMethod.get('HEAD') ?? 0;
+        }
     }
 
     public class HttpMethodNotMockedException extends Exception {}

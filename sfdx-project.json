@@ -1,8 +1,8 @@
 {
   "packageDirectories": [
     {
-      "versionName": "HTTP Mock Lib 1.0.0",
-      "versionNumber": "1.0.0.NEXT",
+      "versionName": "ver 1.3.0",
+      "versionNumber": "1.3.0.NEXT",
       "path": "force-app",
       "default": true,
       "package": "HTTP Mock Lib",
@@ -12,5 +12,10 @@
   "name": "http-mock-lib",
   "namespace": "btcdev",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "65.0"
+  "sourceApiVersion": "65.0",
+  "packageAliases": {
+    "HTTP Mock Lib": "0HoP600000001KHKAY",
+    "HTTP Mock Lib@1.1.0-1": "04tP6000002EJ3FIAW",
+    "HTTP Mock Lib@1.2.0-1": "04tP6000002EJBJIA4"
+  }
 }
