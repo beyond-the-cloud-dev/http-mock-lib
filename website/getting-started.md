@@ -130,16 +130,3 @@ try {
 }
 Test.stopTest();
 ```
-
-## Next Steps
-
-- Learn about [HTTP Methods](/api/http-methods)
-- Explore [Status Codes](/api/status-codes)
-- See [Complete Examples](/examples/basic)
-- Review the [Full API Reference](/api/)
-
-## Need Help?
-
-- Check the [API Reference](/api/)
-- Browse [Examples](/examples/basic)
-- Report issues on [GitHub](https://github.com/beyond-the-cloud-dev/http-mock-lib/issues)
