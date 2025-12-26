@@ -8,10 +8,11 @@
   <h1>HTTP Mock Lib</h1>
 
 <a href="https://beyondthecloud.dev"><img alt="Beyond The Cloud logo" src="https://img.shields.io/badge/MADE_BY_BEYOND_THE_CLOUD-555?style=for-the-badge"></a>
-<a ><img alt="API version" src="https://img.shields.io/badge/api-v65.0-blue?style=for-the-badge"></a>
-<a href="https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-mit-green?style=for-the-badge"></a>
 
-[![CI](https://github.com/beyond-the-cloud-dev/http-mock-lib/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/beyond-the-cloud-dev/http-mock-lib/actions/workflows/ci.yml)
+<img alt="API version" src="https://img.shields.io/badge/api-v65.0-blue?style=for-the-badge">
+<a href="https://github.com/beyond-the-cloud-dev/soql-lib/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-mit-green?style=for-the-badge"></a>
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/beyond-the-cloud-dev/http-mock-lib?style=for-the-badge&logo=github&color=blue">
+<img alt="GitHub Release" src="https://img.shields.io/github/v/release/beyond-the-cloud-dev/http-mock-lib?display_name=tag&style=for-the-badge&color=blue">
 </div>
 
 # Getting Started
