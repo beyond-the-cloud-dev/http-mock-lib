@@ -39,10 +39,7 @@ export default defineConfig({
         link: 'https://www.linkedin.com/company/beyondtheclouddev'
       }
     ],
-    footer: {
-      message: 'Part of <a href="https://apexfluently.beyondthecloud.dev">Apex Fluently</a>',
-      copyright: 'Copyright © 2025 <a href="https://beyondthecloud.dev">Beyond the Cloud</a>'
-    },
+    footer: false,
     search: {
       provider: 'local'
     }

@@ -80,3 +80,5 @@ HTTP Mock Lib is part of [Apex Fluently](https://apexfluently.beyondthecloud.dev
 ## Get Started
 
 Ready to simplify your HTTP mocking? [Get started →](/getting-started)
+
+<BTCFooter context="http-mock" />
