@@ -19,8 +19,17 @@
               </div>
             </div>
             <p class="company-description">{{ data.company.description }}</p>
-            <div class="partner-badge">
-              <img src="/images/salesforcePartnerBadgeHorizontal.png" alt="Salesforce Partner" class="sf-badge-img" />
+
+            <!-- SF Badge + Social icons side by side -->
+            <div class="badge-and-social">
+              <div class="partner-badge">
+                <img src="/images/salesforcePartnerBadgeHorizontal.png" alt="Salesforce Partner" class="sf-badge-img" />
+              </div>
+              <div class="social-icons">
+                <a v-for="social in data.social" :key="social.name" :href="social.href" :aria-label="social.name" class="social-icon" target="_blank" rel="noopener noreferrer">
+                  <img :src="'/images/social/' + social.icon + '.svg'" :alt="social.name" class="social-img" />
+                </a>
+              </div>
             </div>
           </div>
 
@@ -101,8 +110,17 @@
               </div>
             </div>
             <p class="company-description">{{ data.company.description }}</p>
-            <div class="partner-badge">
-              <img src="/images/salesforcePartnerBadgeHorizontal.png" alt="Salesforce Partner" class="sf-badge-img" />
+
+            <!-- SF Badge + Social icons stacked -->
+            <div class="badge-and-social-mobile">
+              <div class="partner-badge">
+                <img src="/images/salesforcePartnerBadgeHorizontal.png" alt="Salesforce Partner" class="sf-badge-img" />
+              </div>
+              <div class="social-icons">
+                <a v-for="social in data.social" :key="social.name" :href="social.href" :aria-label="social.name" class="social-icon" target="_blank" rel="noopener noreferrer">
+                  <img :src="'/images/social/' + social.icon + '.svg'" :alt="social.name" class="social-img" />
+                </a>
+              </div>
             </div>
           </div>
 
@@ -167,7 +185,7 @@
       </div>
     </div>
 
-    <!-- Bottom Bar -->
+    <!-- Bottom Bar - text only -->
     <div class="footer-bottom">
       <div class="footer-container bottom-container">
         <!-- Desktop Bottom -->
@@ -179,30 +197,20 @@
             <span class="separator">•</span>
             <span>{{ data.company.address }}</span>
             <span class="separator">•</span>
-            <a :href="data.legal.privacyPolicy" class="privacy-link">Privacy Policy</a>
-          </div>
-          <div class="bottom-right">
-            <a :href="'mailto:' + data.company.email" class="email-link">{{ data.company.email }}</a>
-            <div class="social-icons">
-              <a v-for="social in data.social" :key="social.name" :href="social.href" :aria-label="social.name" class="social-icon" target="_blank" rel="noopener noreferrer">
-                <img :src="'/images/social/' + social.icon + '.svg'" :alt="social.name" class="social-img" />
-              </a>
-            </div>
+            <a :href="'mailto:' + data.company.email" class="bottom-link">{{ data.company.email }}</a>
+            <span class="separator">•</span>
+            <a :href="data.legal.privacyPolicy" class="bottom-link">Privacy Policy</a>
           </div>
         </div>
 
         <!-- Mobile Bottom -->
         <div class="bottom-content-mobile mobile-only">
-          <div class="mobile-social">
-            <a v-for="social in data.social" :key="social.name" :href="social.href" :aria-label="social.name" class="social-icon" target="_blank" rel="noopener noreferrer">
-              <img :src="'/images/social/' + social.icon + '.svg'" :alt="social.name" class="social-img" />
-            </a>
-          </div>
-          <a :href="'mailto:' + data.company.email" class="email-link mobile-email">{{ data.company.email }}</a>
           <div class="mobile-legal">
             <span>© {{ currentYear }} Beyond The Cloud</span>
             <span class="separator">•</span>
-            <a :href="data.legal.privacyPolicy" class="privacy-link">Privacy Policy</a>
+            <a :href="'mailto:' + data.company.email" class="bottom-link">{{ data.company.email }}</a>
+            <span class="separator">•</span>
+            <a :href="data.legal.privacyPolicy" class="bottom-link">Privacy Policy</a>
           </div>
         </div>
       </div>
@@ -218,7 +226,7 @@ import { footerData, contextLinks } from '../footer-data.js'
 const props = defineProps({
   context: {
     type: String,
-    default: 'apex-fluently'
+    default: 'http-mock'
   }
 })
 
@@ -292,7 +300,7 @@ const currentContextLinks = computed(() => contextLinks[props.context] || [])
 }
 
 .bottom-container {
-  padding: 20px 50px;
+  padding: 20px 24px;
 }
 
 /* Desktop Grid */
@@ -346,7 +354,21 @@ const currentContextLinks = computed(() => contextLinks[props.context] || [])
   margin-bottom: 24px;
 }
 
-/* Partner Badge */
+/* Partner Badge + Social Icons together */
+.badge-and-social {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.badge-and-social-mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
 .partner-badge {
   display: inline-flex;
   align-items: center;
@@ -355,6 +377,36 @@ const currentContextLinks = computed(() => contextLinks[props.context] || [])
 .sf-badge-img {
   height: 60px;
   width: auto;
+  object-fit: contain;
+}
+
+/* Social Icons */
+.social-icons {
+  display: flex;
+  gap: 4px;
+}
+
+.social-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--btc-gray);
+  color: var(--btc-text);
+  transition: all 0.2s;
+}
+
+.social-icon:hover {
+  background: var(--btc-blue);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.social-img {
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 }
 
@@ -460,15 +512,13 @@ const currentContextLinks = computed(() => contextLinks[props.context] || [])
   color: var(--btc-text);
 }
 
-/* Bottom Bar */
+/* Bottom Bar - text only */
 .footer-bottom {
   border-top: 1px solid var(--btc-border);
 }
 
 .bottom-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: block;
 }
 
 .bottom-left {
@@ -484,61 +534,14 @@ const currentContextLinks = computed(() => contextLinks[props.context] || [])
   color: var(--btc-text-muted);
 }
 
-.privacy-link {
+.bottom-link {
   color: var(--btc-text-muted);
   text-decoration: none;
   transition: color 0.2s;
 }
 
-.privacy-link:hover {
+.bottom-link:hover {
   color: var(--btc-text);
-}
-
-.bottom-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.email-link {
-  color: var(--btc-text);
-  font-size: 14px;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.email-link:hover {
-  color: var(--btc-light-blue);
-}
-
-/* Social Icons */
-.social-icons {
-  display: flex;
-  gap: 4px;
-}
-
-.social-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--btc-gray);
-  color: var(--btc-text);
-  transition: all 0.2s;
-}
-
-.social-icon:hover {
-  background: var(--btc-blue);
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-.social-img {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
 }
 
 /* Mobile Styles */
@@ -582,10 +585,6 @@ const currentContextLinks = computed(() => contextLinks[props.context] || [])
     margin: 0 auto 24px;
   }
 
-  .mobile-company .partner-badge {
-    justify-content: center;
-  }
-
   /* Mobile Links */
   .mobile-links {
     display: flex;
@@ -611,26 +610,14 @@ const currentContextLinks = computed(() => contextLinks[props.context] || [])
     text-align: center;
   }
 
-  .mobile-social {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .mobile-social .social-icon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .mobile-email {
-    display: block;
-    margin-bottom: 12px;
-  }
-
   .mobile-legal {
     color: var(--btc-text-muted);
     font-size: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
   }
 }
 
