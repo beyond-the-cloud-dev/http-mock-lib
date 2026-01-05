@@ -4,7 +4,6 @@
 
 <!--
  sf package version create --package "HTTP Mock Lib" --target-dev-hub beyondthecloud-prod --installation-key-bypass --wait 30 --code-coverage
-
  sf package version promote --package "HTTP Mock Lib@1.2.0-1"  --target-dev-hub beyondthecloud-prod
 -->
 
