@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
+  cleanUrls: true,
   title: "HTTP Mock Lib",
   description: "A fluent API for mocking HTTP callouts in Salesforce Apex tests",
   base: '/',
