@@ -723,14 +723,189 @@ private class HttpMockTest {
         Assert.areEqual('HTTP Endpoint /api/v2 hasn\'t been mocked.', mockException.getMessage(), 'Message should be HTTP Endpoint /api/v2 hasn\'t been mocked.');
     }
 
+    @IsTest
+    static void statusText() {
+        new HttpMock()
+            .whenGetOn('/api/v1').statusCodeServiceUnavailable().status('Service Unavailable')
+            .mock();
+
+        Test.startTest();
+        HttpResponse response = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        Assert.areEqual(503, response.getStatusCode(), 'Status code should be 503');
+        Assert.areEqual('Service Unavailable', response.getStatus(), 'Status should be Service Unavailable');
+    }
+
+    @IsTest
+    static void throwsException() {
+        new HttpMock()
+            .whenPostOn('/api/v1').throwsException(new CalloutException('Read timed out'))
+            .mock();
+
+        CalloutException thrown = null;
+
+        Test.startTest();
+        try {
+            new TestApi().makeCallout('POST', '/api/v1');
+        } catch (CalloutException e) {
+            thrown = e;
+        }
+        Test.stopTest();
+
+        Assert.isNotNull(thrown, 'Callout exception should be thrown');
+        Assert.areEqual('Read timed out', thrown.getMessage(), 'Message should be Read timed out');
+    }
+
+    @IsTest
+    static void throwsExceptionOfAnyType() {
+        new HttpMock()
+            .whenGetOn('/api/v1').throwsException(new IllegalArgumentException('Bad request'))
+            .mock();
+
+        IllegalArgumentException thrown = null;
+
+        Test.startTest();
+        try {
+            new TestApi().makeCallout('GET', '/api/v1');
+        } catch (IllegalArgumentException e) {
+            thrown = e;
+        }
+        Test.stopTest();
+
+        Assert.isNotNull(thrown, 'Illegal argument exception should be thrown');
+        Assert.areEqual('Bad request', thrown.getMessage(), 'Message should be Bad request');
+    }
+
+    @IsTest
+    static void throwsExceptionAfterSuccessfulResponses() {
+        new HttpMock()
+            .whenGetOn('/api/v1').statusCodeOk()
+            .whenGetOn('/api/v1').statusCodeOk()
+            .whenGetOn('/api/v1').throwsException(new CalloutException('Connection reset'))
+            .mock();
+
+        CalloutException thrown = null;
+
+        Test.startTest();
+        HttpResponse first = new TestApi().makeCallout('GET', '/api/v1');
+        HttpResponse second = new TestApi().makeCallout('GET', '/api/v1');
+        try {
+            new TestApi().makeCallout('GET', '/api/v1');
+        } catch (CalloutException e) {
+            thrown = e;
+        }
+        Test.stopTest();
+
+        Assert.areEqual(200, first.getStatusCode(), 'First status code should be 200');
+        Assert.areEqual(200, second.getStatusCode(), 'Second status code should be 200');
+        Assert.isNotNull(thrown, 'Third callout should throw');
+        Assert.areEqual('Connection reset', thrown.getMessage(), 'Message should be Connection reset');
+    }
+
+    @IsTest
+    static void recoversAfterThrownException() {
+        new HttpMock()
+            .whenGetOn('/api/v1').throwsException(new CalloutException('Connection reset'))
+            .whenGetOn('/api/v1').statusCodeOk()
+            .mock();
+
+        CalloutException thrown = null;
+
+        Test.startTest();
+        try {
+            new TestApi().makeCallout('GET', '/api/v1');
+        } catch (CalloutException e) {
+            thrown = e;
+        }
+        HttpResponse retry = new TestApi().makeCallout('GET', '/api/v1');
+        Test.stopTest();
+
+        Assert.isNotNull(thrown, 'First callout should throw');
+        Assert.areEqual(200, retry.getStatusCode(), 'Retry status code should be 200');
+    }
+
+    @IsTest
+    static void throwsExceptionIsCountedAsARequest() {
+        new HttpMock()
+            .whenPostOn('/api/v1').throwsException(new CalloutException('Read timed out'))
+            .mock();
+
+        Test.startTest();
+        try {
+            new TestApi().makeCallout('POST', '/api/v1');
+        } catch (CalloutException e) {
+            Assert.areEqual('Read timed out', e.getMessage(), 'Message should be Read timed out');
+        }
+        Test.stopTest();
+
+        Assert.areEqual(1, HttpMock.requestsTo('/api/v1').post(), 'Request count should be 1');
+    }
+
+    @IsTest
+    static void capturedRequests() {
+        new HttpMock()
+            .whenPostOn('/api/v1').statusCodeOk()
+            .whenPostOn('/api/v1').statusCodeOk()
+            .mock();
+
+        Test.startTest();
+        new TestApi().makeCallout('POST', '/api/v1', '{"id":1}');
+        new TestApi().makeCallout('POST', '/api/v1', '{"id":2}');
+        Test.stopTest();
+
+        List<HttpRequest> captured = HttpMock.requestsTo('/api/v1').captured();
+
+        Assert.areEqual(2, captured.size(), 'Two requests should be captured');
+        Assert.areEqual('{"id":1}', captured[0].getBody(), 'First body should be {"id":1}');
+        Assert.areEqual('{"id":2}', captured[1].getBody(), 'Second body should be {"id":2}');
+    }
+
+    @IsTest
+    static void lastRequest() {
+        new HttpMock()
+            .whenPostOn('/api/v1').statusCodeOk()
+            .whenPostOn('/api/v1').statusCodeOk()
+            .mock();
+
+        Test.startTest();
+        new TestApi().makeCallout('POST', '/api/v1', '{"id":1}');
+        new TestApi().makeCallout('POST', '/api/v1', '{"id":2}');
+        Test.stopTest();
+
+        HttpRequest lastRequest = HttpMock.requestsTo('/api/v1').last();
+
+        Assert.areEqual('{"id":2}', lastRequest.getBody(), 'Last body should be {"id":2}');
+        Assert.areEqual('POST', lastRequest.getMethod(), 'Last method should be POST');
+        Assert.areEqual('application/json', lastRequest.getHeader('Content-Type'), 'Content-Type should be application/json');
+    }
+
+    @IsTest
+    static void lastRequestWhenNoneWereMade() {
+        new HttpMock()
+            .whenGetOn('/api/v1').statusCodeOk()
+            .mock();
+
+        Test.startTest();
+        HttpRequest lastRequest = HttpMock.requestsTo('/api/v1').last();
+        Test.stopTest();
+
+        Assert.isNull(lastRequest, 'Last request should be null');
+        Assert.areEqual(0, HttpMock.requestsTo('/api/v1').captured().size(), 'No request should be captured');
+    }
+
     private class TestApi {
         public HttpResponse makeCallout(String method, String endpoint) {
+            return this.makeCallout(method, endpoint, JSON.serialize(new Map<String, String>{ 'name' => 'callout' }));
+        }
+
+        public HttpResponse makeCallout(String method, String endpoint, String body) {
             HttpRequest request = new HttpRequest();
 
             request.setMethod(method);
             request.setEndpoint(endpoint);
             request.setHeader('Content-Type', 'application/json');
-            request.setBody(JSON.serialize(new Map<String, String>{ 'name' => 'callout' }));
+            request.setBody(body);
 
             return new Http().send(request);
         }
