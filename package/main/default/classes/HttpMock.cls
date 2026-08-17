@@ -12,7 +12,7 @@
 **/
 @SuppressWarnings('PMD.ExcessivePublicCount,PMD.FieldDeclarationsShouldBeAtStart,PMD.CognitiveComplexity,PMD.CyclomaticComplexity')
 @IsTest
-public class HttpMock implements HttpStubbing, HttpCalloutMock {
+global class HttpMock implements HttpStubbing, HttpCalloutMock {
 	/*
 		new HttpMock
 			.whenGetOn('/api/v1/authorize').body('{ "token": "aZ3Xb7Qk" }').statusCodeOk()
@@ -26,7 +26,7 @@ public class HttpMock implements HttpStubbing, HttpCalloutMock {
 		Assert.areEqual(1, HttpMock.requestsTo('/api/v1/authorize').get(), 'One GET request should be made');
 		Assert.areEqual(1, HttpMock.requestsTo('/api/v1/create').post(), 'One POST request should be made');
 	*/
-	public interface HttpStubbing {
+	global interface HttpStubbing {
 		HttpStubbing whenGetOn(String endpointToMock);
 		HttpStubbing whenPostOn(String endpointToMock);
 		HttpStubbing whenPutOn(String endpointToMock);
@@ -76,11 +76,11 @@ public class HttpMock implements HttpStubbing, HttpCalloutMock {
 		void mock();
 	}
 
-	public static Requests requestsTo(String endpoint) {
+	global static Requests requestsTo(String endpoint) {
 		return HttpMock.requestsByEndpoint.get(endpoint) ?? new HttpMockRequests();
 	}
 
-	public interface Requests {
+	global interface Requests {
 		Integer all();
 		Integer get();
 		Integer post();
@@ -119,31 +119,31 @@ public class HttpMock implements HttpStubbing, HttpCalloutMock {
 	private String workingHttpMethod;
 	private String workingEndpoint;
 
-	public HttpStubbing whenGetOn(String endpointToMock) {
+	global HttpStubbing whenGetOn(String endpointToMock) {
 		return this.add('GET', endpointToMock);
 	}
 
-	public HttpStubbing whenPostOn(String endpointToMock) {
+	global HttpStubbing whenPostOn(String endpointToMock) {
 		return this.add('POST', endpointToMock);
 	}
 
-	public HttpStubbing whenPutOn(String endpointToMock) {
+	global HttpStubbing whenPutOn(String endpointToMock) {
 		return this.add('PUT', endpointToMock);
 	}
 
-	public HttpStubbing whenPatchOn(String endpointToMock) {
+	global HttpStubbing whenPatchOn(String endpointToMock) {
 		return this.add('PATCH', endpointToMock);
 	}
 
-	public HttpStubbing whenDeleteOn(String endpointToMock) {
+	global HttpStubbing whenDeleteOn(String endpointToMock) {
 		return this.add('DELETE', endpointToMock);
 	}
 
-	public HttpStubbing whenTraceOn(String endpointToMock) {
+	global HttpStubbing whenTraceOn(String endpointToMock) {
 		return this.add('TRACE', endpointToMock);
 	}
 
-	public HttpStubbing whenHeadOn(String endpointToMock) {
+	global HttpStubbing whenHeadOn(String endpointToMock) {
 		return this.add('HEAD', endpointToMock);
 	}
 
@@ -173,68 +173,68 @@ public class HttpMock implements HttpStubbing, HttpCalloutMock {
 		return this;
 	}
 
-	public HttpStubbing throwsException() {
+	global HttpStubbing throwsException() {
 		return this.throwsException(new CalloutException());
 	}
 
-	public HttpStubbing throwsException(Exception error) {
+	global HttpStubbing throwsException(Exception error) {
 		List<Exception> queued = failures.get(this.workingHttpMethod).get(this.workingEndpoint);
 		queued.set(queued.size() - 1, error);
 		return this;
 	}
 
-	public HttpStubbing body(Object body) {
+	global HttpStubbing body(Object body) {
 		return this.body(JSON.serialize(body));
 	}
 
-	public HttpStubbing body(String body) {
+	global HttpStubbing body(String body) {
 		this.workingHttpResponse.setBody(body);
 		return this;
 	}
 
-	public HttpStubbing body(Blob body) {
+	global HttpStubbing body(Blob body) {
 		this.workingHttpResponse.setBodyAsBlob(body);
 		return this;
 	}
 
-	public HttpStubbing contentTypePlainText() {
+	global HttpStubbing contentTypePlainText() {
 		return this.contentType('text/plain');
 	}
 
-	public HttpStubbing contentTypeHtml() {
+	global HttpStubbing contentTypeHtml() {
 		return this.contentType('text/html');
 	}
 
-	public HttpStubbing contentTypeCsv() {
+	global HttpStubbing contentTypeCsv() {
 		return this.contentType('text/csv');
 	}
 
-	public HttpStubbing contentTypeJson() {
+	global HttpStubbing contentTypeJson() {
 		return this.contentType('application/json');
 	}
 
-	public HttpStubbing contentTypePdf() {
+	global HttpStubbing contentTypePdf() {
 		return this.contentType('application/pdf');
 	}
 
-	public HttpStubbing contentTypeXml() {
+	global HttpStubbing contentTypeXml() {
 		return this.contentType('application/xml');
 	}
 
-	public HttpStubbing contentTypeFormUrlencoded() {
+	global HttpStubbing contentTypeFormUrlencoded() {
 		return this.contentType('application/x-www-form-urlencoded');
 	}
 
-	public HttpStubbing contentType(String contentType) {
+	global HttpStubbing contentType(String contentType) {
 		return this.header('Content-Type', contentType);
 	}
 
-	public HttpStubbing header(String key, String value) {
+	global HttpStubbing header(String key, String value) {
 		this.workingHttpResponse.setHeader(key, value);
 		return this;
 	}
 
-	public HttpStubbing staticResource(String staticResourceName) {
+	global HttpStubbing staticResource(String staticResourceName) {
 		List<StaticResource> staticResources = [SELECT Body FROM StaticResource WHERE Name = :staticResourceName LIMIT 1];
 
 		if (staticResources.isEmpty()) {
@@ -244,77 +244,77 @@ public class HttpMock implements HttpStubbing, HttpCalloutMock {
 		return this.body(staticResources[0].Body);
 	}
 
-	public HttpStubbing statusCodeOk() {
+	global HttpStubbing statusCodeOk() {
 		return this.statusCode(200);
 	}
 
-	public HttpStubbing statusCodeCreated() {
+	global HttpStubbing statusCodeCreated() {
 		return this.statusCode(201);
 	}
 
-	public HttpStubbing statusCodeAccepted() {
+	global HttpStubbing statusCodeAccepted() {
 		return this.statusCode(202);
 	}
 
-	public HttpStubbing statusCodeNoContent() {
+	global HttpStubbing statusCodeNoContent() {
 		return this.statusCode(204);
 	}
 
-	public HttpStubbing statusCodeBadRequest() {
+	global HttpStubbing statusCodeBadRequest() {
 		return this.statusCode(400);
 	}
 
-	public HttpStubbing statusCodeUnauthorized() {
+	global HttpStubbing statusCodeUnauthorized() {
 		return this.statusCode(401);
 	}
 
-	public HttpStubbing statusCodeForbidden() {
+	global HttpStubbing statusCodeForbidden() {
 		return this.statusCode(403);
 	}
 
-	public HttpStubbing statusCodeNotFound() {
+	global HttpStubbing statusCodeNotFound() {
 		return this.statusCode(404);
 	}
 
-	public HttpStubbing statusCodeMethodNotAllowed() {
+	global HttpStubbing statusCodeMethodNotAllowed() {
 		return this.statusCode(405);
 	}
 
-	public HttpStubbing statusCodeInternalServerError() {
+	global HttpStubbing statusCodeInternalServerError() {
 		return this.statusCode(500);
 	}
 
-	public HttpStubbing statusCodeNotImplemented() {
+	global HttpStubbing statusCodeNotImplemented() {
 		return this.statusCode(501);
 	}
 
-	public HttpStubbing statusCodeBadGateway() {
+	global HttpStubbing statusCodeBadGateway() {
 		return this.statusCode(502);
 	}
 
-	public HttpStubbing statusCodeServiceUnavailable() {
+	global HttpStubbing statusCodeServiceUnavailable() {
 		return this.statusCode(503);
 	}
 
-	public HttpStubbing statusCodeGatewayTimeout() {
+	global HttpStubbing statusCodeGatewayTimeout() {
 		return this.statusCode(504);
 	}
 
-	public HttpStubbing statusCode(Integer statusCode) {
+	global HttpStubbing statusCode(Integer statusCode) {
 		this.workingHttpResponse.setStatusCode(statusCode);
 		return this;
 	}
 
-	public HttpStubbing status(String status) {
+	global HttpStubbing status(String status) {
 		this.workingHttpResponse.setStatus(status);
 		return this;
 	}
 
-	public void mock() {
+	global void mock() {
 		Test.setMock(HttpCalloutMock.class, this);
 	}
 
-	public HttpResponse respond(HttpRequest request) {
+	global HttpResponse respond(HttpRequest request) {
 		String requestMethod = request.getMethod();
 		String requestEndpoint = request.getEndpoint();
 

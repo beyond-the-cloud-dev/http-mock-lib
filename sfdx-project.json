@@ -3,10 +3,14 @@
     {
       "versionName": "ver 1.3.0",
       "versionNumber": "1.3.0.NEXT",
-      "path": "force-app",
+      "path": "package",
       "default": true,
       "package": "HTTP Mock Lib",
       "versionDescription": ""
+    },
+    {
+      "path": "force-app",
+      "default": false
     }
   ],
   "name": "http-mock-lib",
