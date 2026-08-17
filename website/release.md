@@ -1,3 +1,93 @@
+# v1.3.0 - 17-August-2026
+
+**Scope**
+
+- New Features: Exception Throwing, Request Capture, Per-Method Request Assertions, Status Text
+- Improvements: Simplified Internals
+
+`HttpMock`
+
+- Added `throwsException(Exception error)` and `throwsException()` for simulating failed callouts
+- Added `captured()` and `last()` for asserting on the requests your code actually sent
+- Added per-method variants: `capturedGets()` … `capturedHeads()` and `lastGet()` … `lastHead()`
+- Added `status()` for setting the response status text
+- Changed class access from `global` to `public`
+
+## New Features
+
+### Exception Throwing
+
+A mocked endpoint can now fail on the wire instead of returning a response — the way a real callout fails when the connection drops or the read times out. The exception takes its position in the response queue, so retries can be tested turn by turn: succeed, fail, recover.
+
+```apex
+new HttpMock()
+    .whenGetOn('/api/v1').statusCodeOk()
+    .whenGetOn('/api/v1').throwsException(new CalloutException('Connection reset'))
+    .whenGetOn('/api/v1').statusCodeOk()
+    .mock();
+```
+
+The no-argument overload throws a default `CalloutException`:
+
+```apex
+new HttpMock()
+    .whenPostOn('/api/v1')
+    .throwsException()
+    .mock();
+```
+
+A callout that throws still counts as a request — it was sent.
+
+See [Exceptions](/api/exceptions) for details.
+
+### Request Capture
+
+`requestsTo()` no longer only counts — it hands you the actual `HttpRequest` objects your code sent, in the order they were made:
+
+```apex
+List<HttpRequest> sent = HttpMock.requestsTo('/api/v1').captured();
+HttpRequest lastSent = HttpMock.requestsTo('/api/v1').last();
+
+Assert.areEqual('{"name":"Jane"}', lastSent.getBody(), 'Body should carry the name');
+```
+
+### Per-Method Request Assertions
+
+Every capture and last-request lookup comes in a per-method variant, for endpoints that serve several verbs:
+
+```apex
+HttpMock.requestsTo('/api/v1').capturedPosts(); // all POSTs, in the order sent
+HttpMock.requestsTo('/api/v1').lastGet();       // the most recent GET, or null
+```
+
+Available for GET, POST, PUT, PATCH, DELETE, TRACE, and HEAD. See [Requests](/api/requests) for details.
+
+### Status Text
+
+`status()` sets the response status text, read by `getStatus()`:
+
+```apex
+new HttpMock()
+    .whenGetOn('/api/v1')
+    .statusCodeServiceUnavailable()
+    .status('Service Unavailable')
+    .mock();
+```
+
+## Improvements
+
+### Simplified Internals
+
+The implementation was slimmed down with no change in behavior: dead code and redundant state removed, duplicated map bookkeeping collapsed with the null-coalescing operator, request counts derived from the captured requests instead of a separate counter map, and single-use helpers inlined. Verified against the full test suite.
+
+## 🚨 Breaking Changes 🚨
+
+### Access Modifier
+
+`HttpMock` and its interfaces are declared `public` instead of `global`. This only affects code that referenced the class across a namespace boundary.
+
+---
+
 # v1.2.0 - 26-December-2025
 
 **Scope**

@@ -5,56 +5,60 @@ Complete API reference for HTTP Mock Lib.
 ## Interface Overview
 
 ```apex
-public interface HttpMockLib {
+public interface HttpStubbing {
     // HTTP Methods
-    HttpMock whenGetOn(String endpointToMock);
-    HttpMock whenPostOn(String endpointToMock);
-    HttpMock whenPutOn(String endpointToMock);
-    HttpMock whenPatchOn(String endpointToMock);
-    HttpMock whenDeleteOn(String endpointToMock);
-    HttpMock whenTraceOn(String endpointToMock);
-    HttpMock whenHeadOn(String endpointToMock);
+    HttpStubbing whenGetOn(String endpointToMock);
+    HttpStubbing whenPostOn(String endpointToMock);
+    HttpStubbing whenPutOn(String endpointToMock);
+    HttpStubbing whenPatchOn(String endpointToMock);
+    HttpStubbing whenDeleteOn(String endpointToMock);
+    HttpStubbing whenTraceOn(String endpointToMock);
+    HttpStubbing whenHeadOn(String endpointToMock);
 
     // Response Body
-    HttpMock body(Object body);
-    HttpMock body(String body);
-    HttpMock body(Blob body);
+    HttpStubbing body(Object body);
+    HttpStubbing body(String body);
+    HttpStubbing body(Blob body);
+
+    // Static Resource
+    HttpStubbing staticResource(String staticResourceName);
 
     // Content-Type
-    HttpMock contentTypePlainText();
-    HttpMock contentTypeHtml();
-    HttpMock contentTypeCsv();
-    HttpMock contentTypeJson();
-    HttpMock contentTypeXml();
-    HttpMock contentTypePdf();
-    HttpMock contentTypeFormUrlencoded();
-    HttpMock contentType(String contentType);
+    HttpStubbing contentTypePlainText();
+    HttpStubbing contentTypeHtml();
+    HttpStubbing contentTypeCsv();
+    HttpStubbing contentTypeJson();
+    HttpStubbing contentTypeXml();
+    HttpStubbing contentTypePdf();
+    HttpStubbing contentTypeFormUrlencoded();
+    HttpStubbing contentType(String contentType);
 
     // Status Code
-    HttpMock statusCodeOk();
-    HttpMock statusCodeCreated();
-    HttpMock statusCodeAccepted();
-    HttpMock statusCodeNoContent();
-    HttpMock statusCodeBadRequest();
-    HttpMock statusCodeUnauthorized();
-    HttpMock statusCodeForbidden();
-    HttpMock statusCodeNotFound();
-    HttpMock statusCodeMethodNotAllowed();
-    HttpMock statusCodeInternalServerError();
-    HttpMock statusCodeNotImplemented();
-    HttpMock statusCodeBadGateway();
-    HttpMock statusCodeServiceUnavailable();
-    HttpMock statusCodeGatewayTimeout();
-    HttpMock statusCode(Integer statusCode);
+    HttpStubbing statusCodeOk();
+    HttpStubbing statusCodeCreated();
+    HttpStubbing statusCodeAccepted();
+    HttpStubbing statusCodeNoContent();
+    HttpStubbing statusCodeBadRequest();
+    HttpStubbing statusCodeUnauthorized();
+    HttpStubbing statusCodeForbidden();
+    HttpStubbing statusCodeNotFound();
+    HttpStubbing statusCodeMethodNotAllowed();
+    HttpStubbing statusCodeInternalServerError();
+    HttpStubbing statusCodeNotImplemented();
+    HttpStubbing statusCodeBadGateway();
+    HttpStubbing statusCodeServiceUnavailable();
+    HttpStubbing statusCodeGatewayTimeout();
+    HttpStubbing statusCode(Integer statusCode);
 
     // Status Text
-    HttpMock status(String status);
+    HttpStubbing status(String status);
 
     // Headers
-    HttpMock header(String key, String value);
+    HttpStubbing header(String key, String value);
 
-    // Transport Failure
-    HttpMock throwsException(Exception error);
+    // Exception
+    HttpStubbing throwsException();
+    HttpStubbing throwsException(Exception error);
 
     // Activation
     void mock();
@@ -76,7 +80,22 @@ public interface Requests {
     Integer head();
 
     List<HttpRequest> captured();
+    List<HttpRequest> capturedGets();
+    List<HttpRequest> capturedPosts();
+    List<HttpRequest> capturedPuts();
+    List<HttpRequest> capturedPatches();
+    List<HttpRequest> capturedDeletes();
+    List<HttpRequest> capturedTraces();
+    List<HttpRequest> capturedHeads();
+
     HttpRequest last();
+    HttpRequest lastGet();
+    HttpRequest lastPost();
+    HttpRequest lastPut();
+    HttpRequest lastPatch();
+    HttpRequest lastDelete();
+    HttpRequest lastTrace();
+    HttpRequest lastHead();
 }
 ```
 
@@ -132,7 +151,7 @@ new HttpMock()
 
 ## Chaining
 
-All methods (except `mock()`) return `HttpMock`, allowing you to chain multiple calls:
+All configuration methods return the `HttpStubbing` interface, allowing you to chain multiple calls (`mock()` ends the chain):
 
 ```apex
 new HttpMock()
@@ -168,7 +187,7 @@ If not specified, HTTP Mock Lib uses these defaults:
 
 - **Status Code:** `200` (OK)
 - **Content-Type:** `application/json`
-- **Body:** Empty string
+- **Body:** `{}` (empty JSON object)
 
 ## Thread Safety
 

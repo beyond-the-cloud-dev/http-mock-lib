@@ -58,6 +58,28 @@ Assert.areEqual(50, batchSizeOf(sent[1]), 'Second batch should carry the remaind
 
 This is what catches a payload that is built wrong: the callout still returns 200, the code under test still reports success, and only the sent body says the shape was off.
 
+## Filtering by Method
+
+When several verbs hit the same endpoint, every lookup has a per-method variant: `capturedGets()` … `capturedHeads()` for the full list, `lastGet()` … `lastHead()` for the most recent one.
+
+```apex
+new HttpMock()
+  .whenGetOn('/api/users').statusCodeOk()
+  .whenPostOn('/api/users').statusCodeCreated()
+  .mock();
+
+Test.startTest();
+new UserApi().syncUsers(); // fetches with GET, then pushes two batches with POST
+Test.stopTest();
+
+List<HttpRequest> pushes = HttpMock.requestsTo('/api/users').capturedPosts();
+
+Assert.areEqual(2, pushes.size(), 'The push should be split into two batches');
+Assert.areEqual('{"name":"Jane"}', HttpMock.requestsTo('/api/users').lastPost().getBody(), 'Last POST should carry the final payload');
+```
+
+Like their unfiltered counterparts, the `captured*()` variants return an empty list and the `last*()` variants return `null` when no request with that method was made.
+
 ## Failed Callouts
 
 A callout that throws is still recorded — it was sent. See [Exceptions](./exceptions).
@@ -69,4 +91,6 @@ A callout that throws is still recorded — it was sent. See [Exceptions](./exce
 | `all()` | Number of requests, all methods |
 | `get()` `post()` `put()` `patch()` `deletex()` `trace()` `head()` | Number of requests for that method |
 | `captured()` | `List<HttpRequest>`, in the order sent |
+| `capturedGets()` `capturedPosts()` `capturedPuts()` `capturedPatches()` `capturedDeletes()` `capturedTraces()` `capturedHeads()` | `List<HttpRequest>` for that method, in the order sent |
 | `last()` | The most recent `HttpRequest`, or `null` |
+| `lastGet()` `lastPost()` `lastPut()` `lastPatch()` `lastDelete()` `lastTrace()` `lastHead()` | The most recent `HttpRequest` for that method, or `null` |

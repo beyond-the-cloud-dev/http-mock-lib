@@ -22,6 +22,17 @@ try {
 }
 ```
 
+## The Default
+
+No argument means a plain `CalloutException` — for tests that only care that the callout failed, not how the failure was worded.
+
+```apex
+new HttpMock()
+  .whenGetOn('/api/users')
+  .throwsException()
+  .mock();
+```
+
 ## Any Exception Type
 
 You supply the exception, so any type works — `CalloutException`, a custom one, or a standard Apex exception.
@@ -64,4 +75,5 @@ Assert.areEqual(1, HttpMock.requestsTo('/api/users').post(), 'Request count shou
 
 | Method | Purpose |
 |--------|---------|
+| `throwsException()` | Throw a default `CalloutException` instead of returning a response |
 | `throwsException(Exception error)` | Throw `error` instead of returning a response |
