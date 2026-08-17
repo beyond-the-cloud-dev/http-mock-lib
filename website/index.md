@@ -27,19 +27,19 @@ features:
 
   - icon: 📦
     title: Flexible Responses
-    details: Return String, Object, or Blob bodies with JSON, XML, CSV, PDF, or custom content types.
+    details: Return String, Object, or Blob bodies — inline or from a Static Resource — with any content type.
 
-  - icon: 🔢
-    title: Built-in Status Codes
-    details: Use semantic methods like statusCodeOk(), statusCodeNotFound(), statusCodeCreated().
+  - icon: 💥
+    title: Failure Simulation
+    details: Queue responses per endpoint, mock error status codes, and throw exceptions mid-sequence to test retries.
+
+  - icon: 🔍
+    title: Request Assertions
+    details: Count the callouts made and assert on the captured requests your code actually sent.
 
   - icon: ⚡
     title: Zero Dependencies
     details: Lightweight, minimal footprint. Just one class to mock all your HTTP callouts.
-
-  - icon: 🎓
-    title: Easy to Learn
-    details: Get started in minutes with a straightforward, modern API.
 ---
 
 ## Why HTTP Mock Lib?

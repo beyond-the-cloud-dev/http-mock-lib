@@ -188,7 +188,3 @@ If not specified, HTTP Mock Lib uses these defaults:
 - **Status Code:** `200` (OK)
 - **Content-Type:** `application/json`
 - **Body:** `{}` (empty JSON object)
-
-## Thread Safety
-
-HTTP Mock Lib uses Salesforce's built-in `Test.setMock()` mechanism, which is thread-safe within test context.
