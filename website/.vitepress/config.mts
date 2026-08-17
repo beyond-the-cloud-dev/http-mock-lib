@@ -29,7 +29,9 @@ export default defineConfig({
           { text: 'Response Body', link: '/api/response-body' },
           { text: 'Content Types', link: '/api/content-types' },
           { text: 'Status Codes', link: '/api/status-codes' },
-          { text: 'Headers', link: '/api/headers' }
+          { text: 'Headers', link: '/api/headers' },
+          { text: 'Exceptions', link: '/api/exceptions' },
+          { text: 'Requests', link: '/api/requests' }
         ]
       }
     ],
