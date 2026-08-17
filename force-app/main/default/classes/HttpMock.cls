@@ -69,13 +69,17 @@ global class HttpMock implements HttpStubbing, HttpCalloutMock {
         HttpStubbing statusCodeServiceUnavailable(); // 503
         HttpStubbing statusCodeGatewayTimeout(); // 504
         HttpStubbing statusCode(Integer statusCode);
+        // Status Text
+        HttpStubbing status(String status);
         // Headers
         HttpStubbing header(String key, String value);
+        // Transport Failure
+        HttpStubbing throwsException(Exception error);
         // Mock
         void mock();
     }
 
-    // Request Counts for assertions
+    // Request Counts and captured requests for assertions
     global static Requests requestsTo(String endpoint) {
         return HttpMock.requestsByEndpoint.get(endpoint) ?? new HttpMockRequests();
     }
@@ -90,14 +94,25 @@ global class HttpMock implements HttpStubbing, HttpCalloutMock {
         Integer deletex(); // delete is a reserved keyword
         Integer trace();
         Integer head();
+
+        // Captured requests, in the order they were made
+        List<HttpRequest> captured();
+        HttpRequest last();
     }
 
     // Implementation
 
     private static Map<String, Map<String, List<HttpResponse>>> mocks = new Map<String, Map<String, List<HttpResponse>>>();
+    // Aligned with `mocks` by index: every response appended there appends an entry here,
+    // null unless the caller asked that turn to fail. Keeping the two lists parallel is
+    // what lets a failure take its place in the queue — two successes then a dropped
+    // connection is expressible, and consumed in that order.
+    private static Map<String, Map<String, List<Exception>>> failures = new Map<String, Map<String, List<Exception>>>();
     private static Map<String, HttpMockRequests> requestsByEndpoint = new Map<String, HttpMockRequests>();
 
     private HttpResponse workingHttpResponse = null;
+    private String workingHttpMethod = null;
+    private String workingEndpoint = null;
     
     public HttpStubbing whenGetOn(String endpointToMock) {
         return this.add('GET', endpointToMock);
@@ -131,12 +146,15 @@ global class HttpMock implements HttpStubbing, HttpCalloutMock {
         this.initWhenEmpty(httpMethod, endpointToMock);
 
         this.workingHttpResponse = new HttpResponse();
+        this.workingHttpMethod = httpMethod;
+        this.workingEndpoint = endpointToMock;
 
         this.body('{}');
         this.contentTypeJson();
         this.statusCodeOk();
 
         mocks.get(httpMethod).get(endpointToMock).add(this.workingHttpResponse);
+        failures.get(httpMethod).get(endpointToMock).add(null);
 
         return this;
     }
@@ -144,11 +162,22 @@ global class HttpMock implements HttpStubbing, HttpCalloutMock {
     private void initWhenEmpty(String httpMethod, String endpointToMock) {
         if (!mocks.containsKey(httpMethod)) {
             mocks.put(httpMethod, new Map<String, List<HttpResponse>>());
+            failures.put(httpMethod, new Map<String, List<Exception>>());
         }
 
         if (!mocks.get(httpMethod).containsKey(endpointToMock)) {
             mocks.get(httpMethod).put(endpointToMock, new List<HttpResponse>());
+            failures.get(httpMethod).put(endpointToMock, new List<Exception>());
         }
+    }
+
+    // A callout can die before any status exists — a dropped connection, a timeout — and
+    // a client handles that on a different code path than a 500. The caller supplies the
+    // exception, so CalloutException is one choice among any.
+    public HttpStubbing throwsException(Exception error) {
+        List<Exception> queued = failures.get(this.workingHttpMethod).get(this.workingEndpoint);
+        queued.set(queued.size() - 1, error);
+        return this;
     }
 
     public HttpStubbing body(Object body) {
@@ -275,6 +304,11 @@ global class HttpMock implements HttpStubbing, HttpCalloutMock {
         return this;
     }
 
+    public HttpStubbing status(String status) {
+        this.workingHttpResponse.setStatus(status);
+        return this;
+    }
+
     public void mock() {
         Test.setMock(HttpCalloutMock.class, this);
     }
@@ -296,21 +330,37 @@ global class HttpMock implements HttpStubbing, HttpCalloutMock {
             throw new HttpEndpointNotMockedException('HTTP Endpoint ' + requestMethod + ' ' + requestEndpoint +  ' hasn\'t been mocked.');
         }
 
-        this.registerRequest(requestMethod, requestEndpoint);
+        // Registered before the turn is resolved, so a request that ends in a transport
+        // failure is still counted and still inspectable — that it was sent at all is
+        // usually the thing under test.
+        this.registerRequest(request, requestEndpoint);
+
+        List<Exception> queuedFailures = failures.get(requestMethod).get(closestMatchingMockedEndpoint);
 
         if (mockedHttpResponses.size() > 1) {
-            return mockedHttpResponses.remove(0);
+            Exception thrownThisTurn = queuedFailures.remove(0);
+            HttpResponse responseThisTurn = mockedHttpResponses.remove(0);
+
+            if (thrownThisTurn != null) {
+                throw thrownThisTurn;
+            }
+
+            return responseThisTurn;
+        }
+
+        if (queuedFailures.get(0) != null) {
+            throw queuedFailures.get(0);
         }
 
         return mockedHttpResponses.get(0);
     }
 
-    private void registerRequest(String httpMethod, String endpoint) {
+    private void registerRequest(HttpRequest request, String endpoint) {
         if (!requestsByEndpoint.containsKey(endpoint)) {
             requestsByEndpoint.put(endpoint, new HttpMockRequests());
         }
 
-        requestsByEndpoint.get(endpoint).incrementRequestCount(httpMethod);
+        requestsByEndpoint.get(endpoint).register(request);
     }
 
     private String findClosestMatchingMockedEndpointBasedOnRequest(HttpRequest httpRequest) {
@@ -340,12 +390,26 @@ global class HttpMock implements HttpStubbing, HttpCalloutMock {
 
     private class HttpMockRequests implements Requests {
         private Map<String, Integer> requestCountByMethod = new Map<String, Integer>();
+        private List<HttpRequest> capturedRequests = new List<HttpRequest>();
 
-        public void incrementRequestCount(String httpMethod) {
+        public void register(HttpRequest request) {
+            this.capturedRequests.add(request);
+            this.incrementRequestCount(request.getMethod());
+        }
+
+        public List<HttpRequest> captured() {
+            return this.capturedRequests.clone();
+        }
+
+        public HttpRequest last() {
+            return this.capturedRequests.isEmpty() ? null : this.capturedRequests[this.capturedRequests.size() - 1];
+        }
+
+        private void incrementRequestCount(String httpMethod) {
             if (!this.requestCountByMethod.containsKey(httpMethod)) {
                 this.requestCountByMethod.put(httpMethod, 0);
             }
-    
+
             this.requestCountByMethod.put(httpMethod, this.requestCountByMethod.get(httpMethod) + 1);
         }
 
