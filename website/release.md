@@ -3,7 +3,7 @@
 **Scope**
 
 - New Features: Exception Throwing, Request Capture, Per-Method Request Assertions, Status Text
-- Improvements: Simplified Internals
+- Improvements: Simplified Internals, Dedicated Package Source, API v67.0
 
 `HttpMock`
 
@@ -11,7 +11,7 @@
 - Added `captured()` and `last()` for asserting on the requests your code actually sent
 - Added per-method variants: `capturedGets()` … `capturedHeads()` and `lastGet()` … `lastHead()`
 - Added `status()` for setting the response status text
-- Changed class access from `global` to `public`
+- Split package source: the unlocked package builds from a dedicated `package/` directory (`global`), while `force-app/` is declared `public` for source deploys
 
 ## New Features
 
@@ -80,11 +80,13 @@ new HttpMock()
 
 The implementation was slimmed down with no change in behavior: dead code and redundant state removed, duplicated map bookkeeping collapsed with the null-coalescing operator, request counts derived from the captured requests instead of a separate counter map, and single-use helpers inlined. Verified against the full test suite.
 
-## 🚨 Breaking Changes 🚨
+### Dedicated Package Source
 
-### Access Modifier
+The `btcdev` unlocked package now builds from a dedicated `package/` directory, where `HttpMock` is declared `global` for cross-namespace access. The `force-app/` source used for direct deploys and copy-paste installs declares the class `public`.
 
-`HttpMock` and its interfaces are declared `public` instead of `global`. This only affects code that referenced the class across a namespace boundary.
+### API Version Update
+
+Updated Salesforce API version from 65.0 to 67.0.
 
 ---
 
