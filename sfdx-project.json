@@ -12,7 +12,7 @@
   "name": "http-mock-lib",
   "namespace": "btcdev",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "65.0",
+  "sourceApiVersion": "67.0",
   "packageAliases": {
     "HTTP Mock Lib": "0HoP600000001KHKAY",
     "HTTP Mock Lib@1.1.0-1": "04tP6000002EJ3FIAW",

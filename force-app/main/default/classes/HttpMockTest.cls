@@ -2,6 +2,8 @@
  * Copyright (c) 2025 Beyond The Cloud Sp. z o.o. (BeyondTheCloud.Dev)
  * Licensed under the MIT License (https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/LICENSE)
  *
+ * v1.3.0
+ * 
  * PMD False Positives:
  * - CognitiveComplexity: It is a test class and the code is complex but it is necessary to keep it this way.
  * - CyclomaticComplexity: It is a test class and the code is complex but it is necessary to keep it this way.

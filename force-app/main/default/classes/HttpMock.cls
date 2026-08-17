@@ -2,6 +2,8 @@
  * Copyright (c) 2025 Beyond The Cloud Sp. z o.o. (BeyondTheCloud.Dev)
  * Licensed under the MIT License (https://github.com/beyond-the-cloud-dev/http-mock-lib/blob/main/LICENSE)
  *
+ * v1.3.0
+ * 
  * PMD False Positives:
  * - ExcessivePublicCount: It is a library class and exposes all necessary methods to construct a http mock.
  * - FieldDeclarationsShouldBeAtStart: It is a library class and important methods are on the top.
