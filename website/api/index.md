@@ -47,11 +47,36 @@ public interface HttpMockLib {
     HttpMock statusCodeGatewayTimeout();
     HttpMock statusCode(Integer statusCode);
 
+    // Status Text
+    HttpMock status(String status);
+
     // Headers
     HttpMock header(String key, String value);
 
+    // Transport Failure
+    HttpMock throwsException(Exception error);
+
     // Activation
     void mock();
+}
+```
+
+Requests made against the mock are recorded, and readable through a separate entry point:
+
+```apex
+public interface Requests {
+    Integer all();
+
+    Integer get();
+    Integer post();
+    Integer put();
+    Integer patch();
+    Integer deletex();
+    Integer trace();
+    Integer head();
+
+    List<HttpRequest> captured();
+    HttpRequest last();
 }
 ```
 
@@ -71,6 +96,12 @@ Set HTTP status codes using semantic methods.
 
 ### [Headers](/api/headers)
 Add custom headers to your mocked responses.
+
+### [Exceptions](/api/exceptions)
+Make a callout fail on the wire instead of returning a response.
+
+### [Requests](/api/requests)
+Count the callouts made, and assert on what your code actually sent.
 
 ## Quick Reference
 

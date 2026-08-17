@@ -189,6 +189,18 @@ new HttpMock()
   .mock();
 ```
 
+## Status Text
+
+`HttpResponse` carries a status code and a status text, and they are set separately. Use `.status()` when the code under test reads `getStatus()` — an error message built from the response, for instance.
+
+```apex
+new HttpMock()
+  .whenGetOn('/api/users')
+  .statusCodeServiceUnavailable()
+  .status('Service Unavailable')
+  .mock();
+```
+
 ## Reference
 
 | Code | Method |
@@ -208,3 +220,4 @@ new HttpMock()
 | 503 | `statusCodeServiceUnavailable()` |
 | 504 | `statusCodeGatewayTimeout()` |
 | Custom | `statusCode(Integer)` |
+| Status text | `status(String)` |
