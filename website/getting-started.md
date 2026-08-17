@@ -1,132 +1,130 @@
 # Getting Started
 
-HTTP Mock Lib provides a fluent API for mocking HTTP callouts in Salesforce Apex tests. This guide will help you get started in minutes.
-
-## Prerequisites
-
-- Salesforce API version 64.0 or higher
-- Basic understanding of Apex testing
-- Familiarity with HTTP callouts in Salesforce
+HTTP Mock Lib mocks HTTP callouts in Apex tests with one class and a fluent API: say what each endpoint returns, run your code, assert on what it sent.
 
 ## Installation
 
-See the [Installation Guide](/installation) for detailed instructions on adding HTTP Mock Lib to your Salesforce org.
+See the [Installation Guide](/installation).
 
 ## Your First Mock
 
-Let's create a simple HTTP mock for a GET request:
+The code under test — a service that registers a shipment with a courier API and returns the tracking number:
 
 ```apex
-@IsTest
-private class MyFirstMockTest {
-  @IsTest
-  static void testSimpleGetRequest() {
-    // Arrange - Set up the mock
-    new HttpMock()
-      .whenGetOn('/api/v1/users')
-      .body('{ "name": "John Doe", "email": "john@example.com" }')
-      .statusCodeOk()
-      .mock();
+public with sharing class ShipmentService {
+  public String registerShipment(String orderNumber) {
+    HttpRequest request = new HttpRequest();
+    request.setEndpoint('callout:Courier_API/api/v2/shipments');
+    request.setMethod('POST');
+    request.setHeader('Content-Type', 'application/json');
+    request.setBody(JSON.serialize(new Map<String, String>{ 'orderNumber' => orderNumber }));
 
-    // Act - Make your callout
-    Test.startTest();
-    UserService service = new UserService();
-    User result = service.getUser();
-    Test.stopTest();
+    HttpResponse response = new Http().send(request);
+    Map<String, Object> payload = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
 
-    // Assert - Verify the results
-    Assert.areEqual('John Doe', result.name);
-    Assert.areEqual('john@example.com', result.email);
+    return (String) payload.get('trackingNumber');
   }
 }
 ```
 
-## Understanding the Fluent API
+The test mocks the endpoint, runs the service, and asserts on the result:
 
-The HttpMock API follows a fluent pattern with three main steps:
+```apex
+@IsTest
+private class ShipmentServiceTest {
+  @IsTest
+  static void registerShipmentReturnsTrackingNumber() {
+    new HttpMock()
+      .whenPostOn('/api/v2/shipments')
+      .body('{ "trackingNumber": "1Z999AA10123456784" }')
+      .statusCodeCreated()
+      .mock();
 
-### 1. Define the Endpoint
+    Test.startTest();
+    String trackingNumber = new ShipmentService().registerShipment('ORD-1042');
+    Test.stopTest();
 
-Specify which HTTP method and endpoint to mock:
+    Assert.areEqual('1Z999AA10123456784', trackingNumber, 'Tracking number should come from the courier response');
+  }
+}
+```
+
+The mocked path matches any request endpoint that contains it — so `/api/v2/shipments` also matches `callout:Courier_API/api/v2/shipments` and full URLs with query parameters. See [Endpoint Matching](/api/http-methods#endpoint-matching).
+
+## Defaults
+
+Every mocked endpoint starts with status `200`, content type `application/json`, and body `{}`. Set only what your test cares about:
 
 ```apex
 new HttpMock()
-  .whenGetOn('/api/v1/users')      // GET request
-  .whenPostOn('/api/v1/users')     // POST request
-  .whenPutOn('/api/v1/users/1')    // PUT request
-  .whenDeleteOn('/api/v1/users/1') // DELETE request
-```
-
-### 2. Configure the Response
-
-Set the response body, content type, status code, and headers:
-
-```apex
-.body('{ "success": true }')  // Response body
-.contentTypeJson()            // Content-Type header
-.statusCodeOk()               // HTTP 200
-.header('X-Custom', 'value')  // Custom header
-```
-
-### 3. Activate the Mock
-
-Call `.mock()` to activate your configuration:
-
-```apex
-.mock();
+  .whenGetOn('/api/v2/shipments/1Z999AA10123456784')
+  .mock(); // responds 200 with {}
 ```
 
 ## Common Patterns
 
-### Mocking Multiple Endpoints
+### More Than One Endpoint
 
-You can mock multiple endpoints in a single test:
+Each `when[Method]On` starts a new stub — mock the whole integration in one chain:
 
 ```apex
 new HttpMock()
-  .whenGetOn('/api/v1/authorize')
-    .body('{ "token": "aZ3Xb7Qk" }')
-    .statusCodeOk()
-  .whenPostOn('/api/v1/create')
-    .body('{ "success": true }')
+  .whenPostOn('/oauth/token')
+    .body('{ "access_token": "a1b2c3" }')
+  .whenPostOn('/api/v2/shipments')
+    .body('{ "trackingNumber": "1Z999AA10123456784" }')
     .statusCodeCreated()
   .mock();
 ```
 
-### Using Objects as Response Bodies
+### Object Bodies
 
-Pass Apex objects that will be JSON-serialized:
+Anything that isn't a `String` or `Blob` is JSON-serialized:
 
 ```apex
-Map<String, String> response = new Map<String, String>{
-  'token' => 'aZ3Xb7Qk',
-  'expires' => '3600'
-};
-
-new HttpMock()
-  .whenGetOn('/api/v1/token')
-  .body(response)
-  .statusCodeOk()
-  .mock();
+.body(new Map<String, String>{ 'trackingNumber' => '1Z999AA10123456784' })
 ```
 
-### Simulating Errors
+### Error Responses
 
-Mock error responses to test error handling:
+Mock the failure your integration has error handling for, and assert on that handling:
 
 ```apex
 new HttpMock()
-  .whenPostOn('/api/v1/users')
-  .body('{ "error": "Unauthorized" }')
-  .statusCodeUnauthorized()
+  .whenPostOn('/api/v2/shipments')
+  .body('{ "error": "address_not_routable" }')
+  .statusCodeBadRequest()
   .mock();
 
 Test.startTest();
-try {
-  new UserService().createUser();
-  Assert.fail('Expected exception');
-} catch (CalloutException e) {
-  Assert.isTrue(e.getMessage().contains('Unauthorized'));
-}
+ShipmentResult result = new ShipmentService().registerShipmentSafe('ORD-1042');
 Test.stopTest();
+
+Assert.isFalse(result.success, 'An unroutable address should not register a shipment');
+Assert.areEqual('address_not_routable', result.errorCode, 'Error code should come from the courier');
 ```
+
+### Retries
+
+Stub the same endpoint several times and the responses are consumed in order — the last one repeats. An exception can take a turn in that queue:
+
+```apex
+new HttpMock()
+  .whenGetOn('/api/v2/shipments').throwsException(new CalloutException('Read timed out'))
+  .whenGetOn('/api/v2/shipments').statusCodeOk()
+  .mock();
+// first callout throws, the retry succeeds
+```
+
+See [Exceptions](/api/exceptions).
+
+### Asserting On What Was Sent
+
+The mock records every request. Read them back to verify the payload your code built:
+
+```apex
+Assert.areEqual(1, HttpMock.requestsTo('/api/v2/shipments').post(), 'One shipment should be registered');
+Assert.areEqual('{"orderNumber":"ORD-1042"}', HttpMock.requestsTo('/api/v2/shipments').last().getBody(), 'Payload should carry the order number');
+```
+
+See [Requests](/api/requests).

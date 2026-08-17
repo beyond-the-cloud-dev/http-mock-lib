@@ -121,21 +121,33 @@ static void testCrudOperations() {
 
 ## Endpoint Matching
 
-The endpoint parameter should match the path used in your callout:
+A mock matches when the request endpoint **contains** the mocked path. That is why `/v1/users` matches all of these:
 
 ```apex
-// If your code does:
-Http http = new Http();
-HttpRequest req = new HttpRequest();
-req.setEndpoint('https://api.example.com/v1/users');
-
-// Then mock like this:
-new HttpMock()
-  .whenGetOn('/v1/users')  // ✅ Correct - matches path
-  .mock();
-
-// Not like this:
-new HttpMock()
-  .whenGetOn('https://api.example.com/v1/users')  // ❌ Wrong - includes domain
-  .mock();
+request.setEndpoint('https://api.example.com/v1/users');
+request.setEndpoint('callout:Example_API/v1/users');
+request.setEndpoint('https://api.example.com/v1/users?active=true');
 ```
+
+Keep the mocked path specific enough to be unambiguous — `/users` also matches `/v2/users`.
+
+### Longest Match Wins
+
+When several mocks match one request, the most specific (longest) one answers:
+
+```apex
+new HttpMock()
+  .whenGetOn('/v1/users').body('[{"id": "123"}, {"id": "456"}]')
+  .whenGetOn('/v1/users/123').body('{"id": "123", "name": "John"}')
+  .mock();
+
+// GET /v1/users     -> the list
+// GET /v1/users/123 -> the single record
+```
+
+### Nothing Matches
+
+- The request's verb has no mocks at all: `HttpMock.HttpMethodNotMockedException`
+- The verb is mocked, but no endpoint matches: `HttpMock.HttpEndpointNotMockedException`
+
+Both name the offending method or endpoint in their message.

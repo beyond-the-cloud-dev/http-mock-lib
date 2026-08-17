@@ -4,7 +4,7 @@
 
 <!--
  sf package version create --package "HTTP Mock Lib" --target-dev-hub beyondthecloud-prod --installation-key-bypass --wait 30 --code-coverage
- sf package version promote --package "HTTP Mock Lib@1.2.0-1"  --target-dev-hub beyondthecloud-prod
+ sf package version promote --package "HTTP Mock Lib@1.3.0-1"  --target-dev-hub beyondthecloud-prod
 -->
 
 Install the HTTP Mock Lib unlocked package with `btcdev` namespace to your Salesforce environment:
