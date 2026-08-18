@@ -1,5 +1,59 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import defineVersionedConfig from 'vitepress-versioning-plugin'
+
+const dirname = fileURLToPath(new URL('.', import.meta.url))
+const docsRoot = path.resolve(dirname, '..')
+
+const latestVersion = '1.3.0'
+
+/**
+ * Every route a docs folder serves, e.g. ['/', '/api/', '/api/headers'].
+ * Lets the version switcher jump to the same page in another version
+ * instead of dumping the reader on that version's home page.
+ */
+function routesIn(dir: string, exclude: string[] = []): string[] {
+  const routes: string[] = []
+
+  const walk = (absolute: string, relative: string) => {
+    for (const entry of fs.readdirSync(absolute, { withFileTypes: true })) {
+      if (exclude.includes(entry.name)) continue
+
+      if (entry.isDirectory()) {
+        walk(path.join(absolute, entry.name), `${relative}/${entry.name}`)
+        continue
+      }
+      if (!entry.name.endsWith('.md')) continue
+
+      routes.push(
+        entry.name === 'index.md'
+          ? `${relative}/`
+          : `${relative}/${entry.name.slice(0, -'.md'.length)}`
+      )
+    }
+  }
+
+  walk(dir, '')
+  return routes.sort()
+}
+
+const versionsDir = path.join(docsRoot, 'versions')
+const versions = fs.existsSync(versionsDir)
+  ? fs
+      .readdirSync(versionsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+      .sort()
+      .reverse()
+  : []
+
+const pages: Record<string, string[]> = {
+  latest: routesIn(docsRoot, ['versions', '.vitepress', 'public'])
+}
+for (const version of versions) {
+  pages[version] = routesIn(path.join(versionsDir, version))
+}
 
 export default defineVersionedConfig(
   {
@@ -9,7 +63,7 @@ export default defineVersionedConfig(
     base: '/',
 
     versioning: {
-      latestVersion: '1.3.0'
+      latestVersion
     },
 
     // Required: vitepress-versioning-plugin only generates versioned sidebars
@@ -21,14 +75,14 @@ export default defineVersionedConfig(
     themeConfig: {
       logo: '/logo.png',
 
-      versionSwitcher: {
-        text: 'Version',
-        includeLatestVersion: true
-      },
+      // Replaced by ./theme/components/VersionSwitcher.vue, which preserves the
+      // current page across versions rather than always linking to `/<version>/`.
+      versionSwitcher: false,
 
       nav: [
-        { text: 'Home', link: '/' },
-        { text: 'Documentation', link: '/api/' }
+        { component: 'VersionedNavLink', props: { text: 'Home', link: '/', versions } },
+        { component: 'VersionedNavLink', props: { text: 'Documentation', link: '/api/', versions } },
+        { component: 'VersionSwitcher', props: { latest: latestVersion, versions, pages } }
       ],
 
       sidebar: {
@@ -72,5 +126,5 @@ export default defineVersionedConfig(
       }
     }
   },
-  fileURLToPath(new URL('.', import.meta.url))
+  dirname
 )
