@@ -1,0 +1,24 @@
+[
+  {
+    "text": "Introduction",
+    "items": [
+      { "text": "Getting Started", "link": "/getting-started" },
+      { "text": "Installation", "link": "/installation" }
+    ]
+  },
+  {
+    "text": "API Reference",
+    "items": [
+      { "text": "Overview", "link": "/api/" },
+      { "text": "HTTP Methods", "link": "/api/http-methods" },
+      { "text": "Response Body", "link": "/api/response-body" },
+      { "text": "Content Types", "link": "/api/content-types" },
+      { "text": "Status Codes", "link": "/api/status-codes" },
+      { "text": "Headers", "link": "/api/headers" }
+    ]
+  },
+  {
+    "text": "Release Notes",
+    "items": [{ "text": "Changelog", "link": "/release" }]
+  }
+]
