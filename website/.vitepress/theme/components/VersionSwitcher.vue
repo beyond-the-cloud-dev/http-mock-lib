@@ -25,12 +25,11 @@ const currentPage = computed(() => {
 })
 
 function linkFor(version) {
-  const isLatest = version === props.latest
-  const prefix = isLatest ? '' : `/${version}`
-  const known = props.pages[isLatest ? 'latest' : version] ?? []
+  const prefix = version === props.latest ? '' : `/${version}`
+  const target = `${prefix}${currentPage.value}`
 
   // Fall back to the version's home page when this page does not exist there.
-  return known.includes(currentPage.value) ? `${prefix}${currentPage.value}` : `${prefix}/`
+  return props.pages[version]?.includes(target) ? target : `${prefix}/`
 }
 
 const items = computed(() =>
