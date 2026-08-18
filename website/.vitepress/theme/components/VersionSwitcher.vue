@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useRoute } from 'vitepress'
+import { useData, useRoute } from 'vitepress'
 import VPFlyout from 'vitepress/dist/client/theme-default/components/VPFlyout.vue'
 import VPMenuLink from 'vitepress/dist/client/theme-default/components/VPMenuLink.vue'
 import VPNavScreenMenuGroup from 'vitepress/dist/client/theme-default/components/VPNavScreenMenuGroup.vue'
@@ -13,6 +13,7 @@ const props = defineProps({
 })
 
 const route = useRoute()
+const { hash } = useData()
 
 const current = computed(
   () => props.versions.find((v) => route.path.startsWith(`/${v}/`)) ?? props.latest
@@ -28,8 +29,10 @@ function linkFor(version) {
   const prefix = version === props.latest ? '' : `/${version}`
   const target = `${prefix}${currentPage.value}`
 
-  // Fall back to the version's home page when this page does not exist there.
-  return props.pages[version]?.includes(target) ? target : `${prefix}/`
+  // Fall back to the version's home page when this page does not exist there;
+  // the anchor only travels with us when the page itself does.
+  // Matches the default theme's locale switcher, which appends the hash too.
+  return props.pages[version]?.includes(target) ? `${target}${hash.value}` : `${prefix}/`
 }
 
 const items = computed(() =>

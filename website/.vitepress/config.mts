@@ -79,6 +79,18 @@ export default defineConfig({
       { icon: 'linkedin', link: 'https://www.linkedin.com/company/beyondtheclouddev' }
     ],
     footer: false,
-    search: { provider: 'local' }
+    search: {
+      provider: 'local',
+      options: {
+        // Keep archived versions out of the search index, so results are not a
+        // mix of current and superseded docs. VitePress calls this "faceting";
+        // it has no built-in support yet.
+        _render(src, env, md) {
+          if (env.relativePath.startsWith('versions/')) return ''
+          const html = md.render(src, env)
+          return env.frontmatter?.search === false ? '' : html
+        }
+      }
+    }
   }
 })
