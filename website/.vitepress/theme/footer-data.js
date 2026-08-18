@@ -29,8 +29,8 @@ export const footerData = {
   },
   products: [
     { label: "ISV Analytics", href: "https://isvanalytics.beyondthecloud.dev" },
-    { label: "Release Notifier", href: "https://releasenotifier.beyondthecloud.dev" },
-    { label: "Wiki", href: "https://wiki.beyondthecloud.dev" }
+    { label: "Veles", href: "https://veles.beyondthecloud.dev" },
+    { label: "Release Notifier", href: "https://releasenotifier.beyondthecloud.dev" }
   ],
   resources: [
     { label: "Blog", href: "https://blog.beyondthecloud.dev" },
@@ -86,8 +86,5 @@ export const contextLinks = {
   ],
   'release-notifier': [
     { label: "Documentation", href: "/docs/intro" }
-  ],
-  'wiki': [
-    { label: "Getting Started", href: "/getting-started" }
   ]
 }
