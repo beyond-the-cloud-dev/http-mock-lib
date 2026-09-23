@@ -74,8 +74,9 @@ export default defineConfig({
     ['meta', { name: 'author', content: 'Beyond The Cloud' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:site_name', content: siteTitle }],
-    ['meta', { property: 'og:image', content: `${siteUrl}/logo.png` }],
-    ['meta', { name: 'twitter:card', content: 'summary' }],
+    ['meta', { property: 'og:image', content: `${siteUrl}/og-image.png` }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:image', content: `${siteUrl}/og-image.png` }],
     [
       'script',
       { type: 'application/ld+json' },
