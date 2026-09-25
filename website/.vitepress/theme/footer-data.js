@@ -84,10 +84,6 @@ export const footerData = {
         logo: "/images/libs/callout-lib.png",
       },
     ],
-    more: {
-      label: "More on GitHub",
-      href: "https://github.com/beyond-the-cloud-dev",
-    },
   },
   products: [
     { label: "ISV Analytics", href: "https://isvanalytics.beyondthecloud.dev" },
